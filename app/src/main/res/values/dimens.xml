@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_indent">16sp</dimen>
+    <dimen name="text_size">22sp</dimen>
+    <dimen name="height_settings">48dp</dimen>
+    <dimen name="margin_horizontal">21dp</dimen>
+    <dimen name="margin_start">16dp</dimen>
+</resources>
