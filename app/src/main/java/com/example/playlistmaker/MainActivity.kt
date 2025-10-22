@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -16,23 +17,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val imageSearch = findViewById<Button>(R.id.search)
-        val imageMedia = findViewById<Button>(R.id.media)
-        val imageSettings = findViewById<Button>(R.id.settings)
+        val searchButton = findViewById<Button>(R.id.search)
+        val mediaButton = findViewById<Button>(R.id.media)
+        val settingsButton = findViewById<Button>(R.id.settingsButton)
 
-        val imageClickListener: View.OnClickListener = object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                Toast.makeText(this@MainActivity, "Нажали на поиск!", Toast.LENGTH_SHORT).show()
-            }
-        }
-        imageSearch.setOnClickListener(imageClickListener)
-
-        imageMedia.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Нажали на медиатеку!", Toast.LENGTH_SHORT).show()
+        searchButton.setOnClickListener {
+            val searchIntent = Intent(this, SearchAcivity::class.java)
+            startActivity(searchIntent)
         }
 
-        imageSettings.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Нажали на настройки!", Toast.LENGTH_SHORT).show()
+        mediaButton.setOnClickListener {
+            val mediaIntent = Intent(this, MediaActivity::class.java)
+            startActivity(mediaIntent)
+        }
+
+        settingsButton.setOnClickListener {
+            val settingsIntent = Intent(this, SettingsActivity::class.java)
+            startActivity(settingsIntent)
         }
 
     }
