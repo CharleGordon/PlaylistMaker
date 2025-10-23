@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/settings"
@@ -8,144 +7,54 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:padding="4dp"
-        android:orientation="horizontal">
+        android:id="@+id/toolBar"
+        android:layout_margin="4dp"
+        app:navigationIcon="@drawable/arrow_back"
+        app:title="@string/settings"
+        app:titleTextAppearance="@style/titleStyle" />
 
-        <Button
-            android:layout_width="@dimen/height_settings"
-            android:layout_height="wrap_content"
-            android:id="@+id/arrowBackSettingsButton"
-            android:backgroundTint="@color/white"
-            android:gravity="start"
-            app:icon="@drawable/arrow_back"
-            app:iconTint="@color/black" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="12dp"
-            android:text="@string/settings"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size" />
-    </LinearLayout>
-
-    <FrameLayout
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/margin_horizontal"
-        android:paddingStart="@dimen/margin_start"
+        android:layout_gravity="center_vertical"
+        android:paddingStart="@dimen/text_indent"
         android:paddingEnd="6dp"
-        android:orientation="horizontal">
+        android:paddingVertical="21dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/dark_theme"
+        android:textAppearance="@style/settingsText"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/dark_theme"
-            android:textSize="@dimen/text_indent"
-            android:textColor="@color/black"/>
-
-        <Switch
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    </FrameLayout>
-
-    <FrameLayout
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/margin_horizontal"
-        android:paddingStart="@dimen/margin_start"
-        android:paddingEnd="6dp"
-        android:layout_marginTop="42dp"
-        android:orientation="horizontal">
+        android:drawableEnd="@drawable/share"
+        android:paddingStart="@dimen/text_indent"
+        android:paddingEnd="12dp"
+        android:paddingVertical="21dp"
+        android:text="@string/share_app"
+        android:textAppearance="@style/settingsText"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/share_app"
-            android:textSize="@dimen/text_indent"
-            android:textColor="@color/black"
-            app:icon="@drawable/share"
-            app:iconPadding="12dp"
-            app:iconGravity="textEnd"
-            app:iconTint="@color/black"/>
-        
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="12dp"
-            android:src="@drawable/share"
-            android:layout_gravity="end"/>
-
-    </FrameLayout>
-
-    <FrameLayout
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/margin_horizontal"
-        android:paddingStart="@dimen/margin_start"
-        android:paddingEnd="6dp"
-        android:layout_marginTop="42dp"
-        android:orientation="horizontal">
+        android:drawableEnd="@drawable/support"
+        android:paddingStart="@dimen/text_indent"
+        android:paddingEnd="12dp"
+        android:paddingVertical="21dp"
+        android:text="@string/text_support"
+        android:textAppearance="@style/settingsText" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/text_support"
-            android:textSize="@dimen/text_indent"
-            android:textColor="@color/black"
-            app:icon="@drawable/share"
-            app:iconPadding="12dp"
-            app:iconGravity="textEnd"
-            app:iconTint="@color/black"/>
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="12dp"
-            android:src="@drawable/support"
-            android:layout_gravity="end"/>
-
-    </FrameLayout>
-
-    <FrameLayout
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/margin_horizontal"
-        android:paddingStart="@dimen/margin_start"
-        android:paddingEnd="6dp"
-        android:layout_marginTop="42dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/user_agreement"
-            android:textSize="@dimen/text_indent"
-            android:textColor="@color/black"
-            app:icon="@drawable/share"
-            app:iconPadding="12dp"
-            app:iconGravity="textEnd"
-            app:iconTint="@color/black"/>
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="12dp"
-            android:src="@drawable/arrow_forward"
-            android:layout_gravity="end"/>
-
-    </FrameLayout>
-
-
+        android:drawableEnd="@drawable/arrow_forward"
+        android:paddingStart="@dimen/text_indent"
+        android:paddingEnd="12dp"
+        android:paddingVertical="21dp"
+        android:text="@string/user_agreement"
+        android:textAppearance="@style/settingsText" />
 
 </LinearLayout>

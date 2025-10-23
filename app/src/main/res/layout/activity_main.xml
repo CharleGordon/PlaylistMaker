@@ -3,87 +3,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main"
     android:orientation="vertical"
-    android:background="@color/blue"
-    android:paddingLeft="@dimen/text_indent"
-    android:paddingRight="@dimen/text_indent" >
+    android:background="@color/blue" >
 
-    <FrameLayout
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="@dimen/text_indent">
+        android:layout_margin="4dp"
+        app:title="@string/app_name"
+        app:titleTextAppearance="@style/titleStyle"
+        app:titleTextColor="@color/white" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size" />
-    </FrameLayout>
-
-    <LinearLayout
+    <Button
+        android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="@dimen/text_size"
+        android:backgroundTint="@color/white"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/search"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size"
+        android:textAllCaps="false"
+        app:icon="@drawable/light_mode"
+        app:iconGravity="textStart"
+        app:iconPadding="1dp"
+        app:iconTint="@color/black"
+        app:cornerRadius="@dimen/margin_start"/>
+
+    <Button
+        android:id="@+id/media"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/text_size"
+        android:backgroundTint="@color/white"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/media"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size"
+        android:textAllCaps="false"
+        app:icon="@drawable/media"
+        app:iconGravity="textStart"
+        app:iconPadding="1dp"
+        app:iconTint="@color/black"
+        app:cornerRadius="@dimen/margin_start"/>
+
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/text_size"
         android:layout_marginBottom="28dp"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/search"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginBottom="@dimen/text_indent"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            android:foreground="?attr/selectableItemBackground"
-            android:text="@string/search"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size"
-            android:textAllCaps="false"
-            app:icon="@drawable/light_mode"
-            app:iconGravity="textStart"
-            app:iconPadding="1dp"
-            app:iconTint="@color/black"
-            app:cornerRadius="@dimen/margin_start"/>
-
-        <Button
-            android:id="@+id/media"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginBottom="@dimen/text_indent"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            android:foreground="?attr/selectableItemBackground"
-            android:text="@string/media"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size"
-            android:textAllCaps="false"
-            app:icon="@drawable/media"
-            app:iconGravity="textStart"
-            app:iconPadding="1dp"
-            app:iconTint="@color/black"
-            app:cornerRadius="@dimen/margin_start"/>
-
-        <Button
-            android:id="@+id/settingsButton"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            android:foreground="?attr/selectableItemBackground"
-            android:text="@string/settings"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size"
-            app:icon="@drawable/settings"
-            app:iconGravity="textStart"
-            app:iconPadding="1dp"
-            app:iconTint="@color/black"
-            app:cornerRadius="@dimen/margin_start"/>
-
-    </LinearLayout>
-
-
+        android:backgroundTint="@color/white"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/settings"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size"
+        app:icon="@drawable/settings"
+        app:iconGravity="textStart"
+        app:iconPadding="1dp"
+        app:iconTint="@color/black"
+        app:cornerRadius="@dimen/margin_start"/>
 
 </LinearLayout> 
