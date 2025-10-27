@@ -17,6 +17,7 @@
     <style name="searchStyle" >
         <item name="android:textColorHint">@color/gray</item>
         <item name="android:drawableTint">@color/gray</item>
+        <item name="android:tint">@color/gray</item>
     </style>
     <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker" />
 </resources>

@@ -31,6 +31,7 @@
     <style name="searchStyle" >
         <item name="android:textColorHint">@color/black</item>
         <item name="android:drawableTint">@color/black</item>
+        <item name="android:tint">@color/black</item>
     </style>
 
 </resources>
