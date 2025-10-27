@@ -14,7 +14,7 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
-    <style name="mainActivityButtons" parent="Widget.MaterialComponents.Button">
+    <style name="mainActivityButtons" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
