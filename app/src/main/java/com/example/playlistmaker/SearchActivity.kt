@@ -16,6 +16,8 @@ import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity() {
 
+    companion object { const val KEY_SEARCH_TEXT = "SEARCH_TEXT" }
+
     private var searchText = ""
     private lateinit var inputEditText: EditText
 
@@ -70,7 +72,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        val savedSearchText = savedInstanceState.getString("SEARCH_TEXT", "")
+        val savedSearchText = savedInstanceState.getString(KEY_SEARCH_TEXT, "")
 
         inputEditText.setText(savedSearchText)
         searchText = savedSearchText
