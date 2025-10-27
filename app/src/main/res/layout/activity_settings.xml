@@ -5,7 +5,7 @@
     android:id="@+id/settings"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="?attr/colorPrimary">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
@@ -14,47 +14,33 @@
         android:layout_margin="4dp"
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/settings"
-        app:titleTextAppearance="@style/titleStyle" />
+        app:titleTextAppearance="@style/titleStyle"
+        style="@style/iconColorBlack"/>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/nightThemeSwitch"
+        style="@style/settingsStyle"
         android:layout_gravity="center_vertical"
-        android:paddingStart="@dimen/text_indent"
-        android:paddingEnd="6dp"
-        android:paddingVertical="21dp"
         android:layout_marginTop="24dp"
-        android:text="@string/dark_theme"
-        android:textAppearance="@style/settingsText"/>
+        android:paddingEnd="6dp"
+        android:text="@string/dark_theme" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/shareApp"
+        style="@style/settingsStyle"
         android:drawableEnd="@drawable/share"
-        android:paddingStart="@dimen/text_indent"
-        android:paddingEnd="12dp"
-        android:paddingVertical="21dp"
-        android:text="@string/share_app"
-        android:textAppearance="@style/settingsText"/>
+        android:text="@string/share_app" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/supportMessage"
+        style="@style/settingsStyle"
         android:drawableEnd="@drawable/support"
-        android:paddingStart="@dimen/text_indent"
-        android:paddingEnd="12dp"
-        android:paddingVertical="21dp"
-        android:text="@string/text_support"
-        android:textAppearance="@style/settingsText" />
+        android:text="@string/text_support" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/userAgreement"
+        style="@style/settingsStyle"
         android:drawableEnd="@drawable/arrow_forward"
-        android:paddingStart="@dimen/text_indent"
-        android:paddingEnd="12dp"
-        android:paddingVertical="21dp"
-        android:text="@string/user_agreement"
-        android:textAppearance="@style/settingsText" />
+        android:text="@string/user_agreement" />
 
 </LinearLayout>

@@ -1,11 +1,14 @@
 package com.example.playlistmaker
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,9 +23,38 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val arrowBackIcon = findViewById<MaterialToolbar>(R.id.toolBar)
+        val shareApp = findViewById<MaterialTextView>(R.id.shareApp)
+        val supportMessage = findViewById<MaterialTextView>(R.id.supportMessage)
+        val userAgreement = findViewById<MaterialTextView>(R.id.userAgreement)
 
         arrowBackIcon.setNavigationOnClickListener {
             finish()
+        }
+
+        shareApp.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            val shareText = getString(R.string.share_course_text)
+
+            intent.putExtra(Intent.EXTRA_TEXT, shareText)
+            startActivity(Intent.createChooser(intent, getString(R.string.share_course_text)))
+        }
+
+        supportMessage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SENDTO)
+
+            intent.data = Uri.parse("mailto:")
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_theme_text))
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.support_text))
+
+            startActivity(intent)
+        }
+
+        userAgreement.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_url)))
+
+            startActivity(intent)
         }
     }
 }

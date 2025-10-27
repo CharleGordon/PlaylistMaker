@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:id="@+id/searchActivity"
     tools:context=".SearchActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/searchArrowBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:navigationIcon="@drawable/arrow_back"
+        app:title="@string/search"
+        app:titleTextAppearance="@style/titleStyle"
+        style="@style/iconColorBlack"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="@dimen/text_indent">
+
+    <EditText
+        android:id="@+id/inputSearchText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/search_14x14"
+        android:drawablePadding="8dp"
+        android:hint="@string/search"
+        android:background="@drawable/search_background"
+        android:maxLines="1"
+        android:inputType="text"
+        android:textAppearance="@style/regularText"
+        style="@style/searchStyle" />
+
+    <ImageView
+        android:id="@+id/clearIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>

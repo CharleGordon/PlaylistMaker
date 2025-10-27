@@ -1,7 +1,36 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
+
+    <style name="settingsStyle" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/text_indent</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingVertical">21dp</item>
+        <item name="android:textSize">@dimen/text_indent</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:drawableTint">@color/white</item>
+    </style>
+
+    <style name="iconColorBlack" >
+        <item name="navigationIconTint">@color/white</item>
+        <item name="android:drawableTint">#1A1B22</item>
+    </style>
+
+    <style name="searchStyle" >
+        <item name="android:textColorHint">@color/black</item>
+        <item name="android:drawableTint">@color/black</item>
+    </style>
+
 </resources>
