@@ -37,7 +37,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditText = findViewById(R.id.inputSearchText)
         val clearIcon = findViewById<ImageView>(R.id.clearIcon)
         val recyclerView = findViewById<RecyclerView>(R.id.trackRecycler)
-        val trackList = ArrayList<Track>()
+        val trackList : MutableList<Track> = mutableListOf()
 
         trackList.add(
             Track(
@@ -117,7 +117,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putString("SEARCH_TEXT", searchText)
+        outState.putString(KEY_SEARCH_TEXT, searchText)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

@@ -21,5 +21,6 @@
     <dimen name="margin_22dp">22dp</dimen>
     <dimen name="margin_24dp">24dp</dimen>
     <dimen name="margin_28dp">28dp</dimen>
+    <dimen name="track_image_corner_radius">2dp</dimen>
 
 </resources>
