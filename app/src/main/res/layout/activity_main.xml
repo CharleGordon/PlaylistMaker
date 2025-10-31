@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/margin_4dp"
         app:title="@string/app_name"
         app:titleTextAppearance="@style/titleStyle"
         app:titleTextColor="@color/white" />
@@ -18,23 +18,23 @@
     <Button
         style="@style/mainActivityButtons"
         android:id="@+id/search"
-        android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="@dimen/text_size"
+        android:layout_marginTop="@dimen/margin_24dp"
+        android:layout_marginHorizontal="@dimen/margin_22dp"
         android:text="@string/search"
         app:icon="@drawable/light_mode" />
 
     <Button
         style="@style/mainActivityButtons"
         android:id="@+id/media"
-        android:layout_margin="@dimen/text_size"
+        android:layout_margin="@dimen/margin_22dp"
         android:text="@string/media"
         app:icon="@drawable/media" />
 
     <Button
         style="@style/mainActivityButtons"
         android:id="@+id/settingsButton"
-        android:layout_marginHorizontal="@dimen/text_size"
-        android:layout_marginBottom="28dp"
+        android:layout_marginHorizontal="@dimen/margin_22dp"
+        android:layout_marginBottom="@dimen/margin_28dp"
         android:text="@string/settings"
         app:icon="@drawable/settings" />
 

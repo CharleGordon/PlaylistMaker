@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical" >
+
+    <ImageView
+        android:id="@+id/trackImage"
+        android:layout_width="@dimen/image_45x45_size"
+        android:layout_height="@dimen/image_45x45_size"
+        android:layout_marginVertical="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        android:layout_marginStart="@dimen/margin_13dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginVertical="@dimen/margin_14dp"
+        android:orientation="vertical" >
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/trackName"
+            style="@style/regularText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="test"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/artistName"
+                style="@style/subtitleGrayText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="test"/>
+
+            <ImageView
+                android:layout_width="@dimen/margin_13dp"
+                android:layout_height="@dimen/margin_13dp"
+                android:src="@drawable/dot_gray"
+                style="@style/grayToWhiteIcon" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/trackLenght"
+                style="@style/subtitleGrayText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                tools:text="test"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/trackSelector"
+        style="@style/grayToWhiteIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow_forward"
+        android:paddingHorizontal="@dimen/margin_8dp"
+        android:paddingVertical="@dimen/margin_5dp"
+        android:layout_marginStart="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_12dp"
+        android:layout_marginTop="@dimen/margin_18dp"
+        android:layout_marginBottom="@dimen/margin_19dp" />
+
+</LinearLayout>

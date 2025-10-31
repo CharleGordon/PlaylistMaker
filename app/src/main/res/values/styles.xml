@@ -14,6 +14,13 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
+    <style name="subtitleGrayText" >
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
 
     <style name="mainActivityButtons" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
@@ -34,10 +41,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingStart">@dimen/text_indent</item>
-        <item name="android:paddingEnd">12dp</item>
-        <item name="android:paddingVertical">21dp</item>
+        <item name="android:paddingEnd">@dimen/margin_12dp</item>
+        <item name="android:paddingVertical">@dimen/margin_21dp</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:drawableTint">#AEAFB4</item>
         <item name="android:textAppearance">@style/regularText</item>
     </style>
+
 </resources>
