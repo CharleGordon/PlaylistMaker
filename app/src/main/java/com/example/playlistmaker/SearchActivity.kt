@@ -23,8 +23,6 @@ import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object { const val KEY_SEARCH_TEXT = "SEARCH_TEXT" }
-
     private enum class SearchResultState {
         SUCCESS,
         NO_RESULTS,
@@ -158,10 +156,11 @@ class SearchActivity : AppCompatActivity() {
 
         searchService.search(searchText).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
-                if(response.code() == 200) {
-                    if(response.body()?.results?.isNotEmpty() == true) {
+                if(response.isSuccessful) {
+                    val trackResult = response.body()?.results
+                    if(!trackResult.isNullOrEmpty()) {
                         trackList.clear()
-                        trackList.addAll(response.body()?.results!!)
+                        trackList.addAll(trackResult)
                         trackAdapter.notifyDataSetChanged()
                         showPlaceholder(SearchResultState.SUCCESS)
                     } else {
@@ -182,4 +181,6 @@ class SearchActivity : AppCompatActivity() {
         trackList.clear()
         trackAdapter.notifyDataSetChanged()
     }
+
+    companion object { const val KEY_SEARCH_TEXT = "SEARCH_TEXT" }
 }
