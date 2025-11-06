@@ -31,6 +31,7 @@
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
         android:singleLine="true"
+        android:paddingEnd="40dp"
         android:drawableStart="@drawable/search_14x14"
         android:drawablePadding="@dimen/margin_8dp"
         android:hint="@string/search"
