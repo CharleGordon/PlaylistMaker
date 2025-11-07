@@ -5,6 +5,8 @@ import com.google.gson.Gson
 
 class SearchHistory(private val sharedPref : SharedPreferences) {
 
+    private val gson = Gson()
+
     fun read(): List<Track> {
 
         val json = sharedPref.getString(SEARCH_HISTORY_KEY, null)
@@ -12,7 +14,7 @@ class SearchHistory(private val sharedPref : SharedPreferences) {
         if (json == null) {
             return emptyList()
         }
-        return Gson().fromJson(json, Array<Track>::class.java).toList()
+        return gson.fromJson(json, Array<Track>::class.java).toList()
     }
 
     fun add(track: Track) {
@@ -36,7 +38,7 @@ class SearchHistory(private val sharedPref : SharedPreferences) {
 
     private fun write(tracks: List<Track>) {
 
-        val json = Gson().toJson(tracks)
+        val json = gson.toJson(tracks)
 
         sharedPref.edit()
             .putString(SEARCH_HISTORY_KEY, json)
