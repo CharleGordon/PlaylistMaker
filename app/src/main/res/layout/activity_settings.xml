@@ -18,7 +18,7 @@
         style="@style/iconColorBlack"/>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/nightThemeSwitch"
+        android:id="@+id/nightThemeSwitcher"
         style="@style/settingsStyle"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="@dimen/margin_24dp"

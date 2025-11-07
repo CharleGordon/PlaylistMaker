@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
@@ -26,6 +27,9 @@ class SettingsActivity : AppCompatActivity() {
         val shareApp = findViewById<MaterialTextView>(R.id.shareApp)
         val supportMessage = findViewById<MaterialTextView>(R.id.supportMessage)
         val userAgreement = findViewById<MaterialTextView>(R.id.userAgreement)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.nightThemeSwitcher)
+        val currentTheme = (applicationContext as App).darkTheme
+        themeSwitcher.isChecked = currentTheme
 
         arrowBackIcon.setNavigationOnClickListener {
             finish()
@@ -55,6 +59,10 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.user_agreement_url)))
 
             startActivity(intent)
+        }
+
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
     }
 }

@@ -16,4 +16,6 @@
     <string name="placeholder_server_error_title">Проблемы со связью</string>
     <string name="placeholder_server_error_loading">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="refresh">Обновить</string>
+    <string name="search_history_text">Вы искали</string>
+    <string name="clear_search_history">Очистить историю</string>
 </resources>
