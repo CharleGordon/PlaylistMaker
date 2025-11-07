@@ -11,12 +11,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,9 +39,14 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var trackList: MutableList<Track>
     private lateinit var trackAdapter: TrackAdapter
+    private lateinit var trackHistoryAdapter: TrackAdapter
     private lateinit var placeholderWithoutTextMessage: LinearLayout
     private lateinit var placeholderServerErrorMessage: LinearLayout
+    private lateinit var searchHistoryView: ScrollView
+    private lateinit var clearSearchHistoryButton: MaterialButton
     private lateinit var refreshButton: Button
+    private lateinit var searchHistory: SearchHistory
+    private val historyTrackList = mutableListOf<Track>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,13 +62,35 @@ class SearchActivity : AppCompatActivity() {
         val arrowBackIcon = findViewById<MaterialToolbar>(R.id.searchArrowBack)
         inputEditText = findViewById(R.id.inputSearchText)
         val clearIcon = findViewById<ImageView>(R.id.clearIcon)
+        val searchHistoryRecycler = findViewById<RecyclerView>(R.id.searchHistoryRecycler)
         recyclerView = findViewById(R.id.trackRecycler)
         trackList = mutableListOf()
-        trackAdapter = TrackAdapter(trackList)
+        trackAdapter = TrackAdapter(trackList) { track ->
+            searchHistory.add(track)
+            updateHistoryList()
+        }
+        trackHistoryAdapter = TrackAdapter(historyTrackList) { track ->
+            searchHistory.add(track)
+            updateHistoryList()
+        }
+        searchHistoryRecycler.adapter = trackHistoryAdapter
         recyclerView.adapter = trackAdapter
         placeholderWithoutTextMessage = findViewById(R.id.placeholderWithoutTextMessage)
         placeholderServerErrorMessage = findViewById(R.id.placeholderServerErrorMessage)
+        searchHistoryView = findViewById(R.id.searchHistoryView)
+        clearSearchHistoryButton = findViewById(R.id.clearSearchHistoryButton)
         refreshButton = findViewById(R.id.refreshButton)
+        val sharedPref = getSharedPreferences(App.PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        searchHistory = SearchHistory(sharedPref)
+
+        updateHistoryList()
+
+        clearSearchHistoryButton.setOnClickListener {
+            searchHistory.clear()
+            historyTrackList.clear()
+            trackHistoryAdapter.notifyDataSetChanged()
+            searchHistoryView.visibility = View.GONE
+        }
 
         refreshButton.setOnClickListener {
             performSearch(inputEditText.text.toString())
@@ -72,11 +103,12 @@ class SearchActivity : AppCompatActivity() {
         clearIcon.setOnClickListener {
             inputEditText.setText("")
 
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
 
             clearTrackList()
             showPlaceholder(SearchResultState.DEFAULT)
+            updateHistoryList()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -86,6 +118,15 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearIcon.visibility = clearButtonVisibility(s)
+
+                if (inputEditText.hasFocus() && s?.isEmpty() == true && historyTrackList.isNotEmpty()) {
+                    recyclerView.visibility = View.GONE
+                    placeholderWithoutTextMessage.visibility = View.GONE
+                    placeholderServerErrorMessage.visibility = View.GONE
+                    searchHistoryView.visibility = View.VISIBLE
+                } else {
+                    searchHistoryView.visibility = View.GONE
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -100,6 +141,14 @@ class SearchActivity : AppCompatActivity() {
                 true
             }
             false
+        }
+
+        inputEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && inputEditText.text.isEmpty() && historyTrackList.isNotEmpty()) {
+                searchHistoryView.visibility = View.VISIBLE
+            } else {
+                searchHistoryView.visibility = View.GONE
+            }
         }
     }
 
@@ -132,16 +181,19 @@ class SearchActivity : AppCompatActivity() {
                 recyclerView.visibility = View.VISIBLE
                 placeholderWithoutTextMessage.visibility = View.GONE
                 placeholderServerErrorMessage.visibility = View.GONE
+                searchHistoryView.visibility = View.GONE
             }
             SearchResultState.NO_RESULTS -> {
                 recyclerView.visibility = View.GONE
                 placeholderWithoutTextMessage.visibility = View.VISIBLE
                 placeholderServerErrorMessage.visibility = View.GONE
+                searchHistoryView.visibility = View.GONE
             }
             SearchResultState.SERVER_ERROR -> {
                 recyclerView.visibility = View.GONE
                 placeholderWithoutTextMessage.visibility = View.GONE
                 placeholderServerErrorMessage.visibility = View.VISIBLE
+                searchHistoryView.visibility = View.GONE
             }
             SearchResultState.DEFAULT -> {
                 recyclerView.visibility = View.GONE
@@ -152,6 +204,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun performSearch(searchText: String) {
+
+        searchHistoryView.visibility = View.GONE
+
         val searchService = RetrofitClient.searchApi
 
         searchService.search(searchText).enqueue(object : Callback<SearchResponse> {
@@ -180,6 +235,20 @@ class SearchActivity : AppCompatActivity() {
     private fun clearTrackList() {
         trackList.clear()
         trackAdapter.notifyDataSetChanged()
+    }
+
+    private fun updateHistoryList() {
+        val newHistory = searchHistory.read()
+
+        historyTrackList.clear()
+        historyTrackList.addAll(newHistory)
+        trackHistoryAdapter.notifyDataSetChanged()
+
+        if (historyTrackList.isNotEmpty() && inputEditText.text.isEmpty() && inputEditText.hasFocus()) {
+            searchHistoryView.visibility = View.VISIBLE
+        } else {
+            searchHistoryView.visibility = View.GONE
+        }
     }
 
     companion object { const val KEY_SEARCH_TEXT = "SEARCH_TEXT" }
