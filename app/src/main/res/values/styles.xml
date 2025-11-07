@@ -21,6 +21,12 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
+    <style name="mediumText">
+        <item name="android:textSize">19sp</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
 
     <style name="mainActivityButtons" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
@@ -46,6 +52,20 @@
         <item name="android:layout_gravity">start</item>
         <item name="android:drawableTint">#AEAFB4</item>
         <item name="android:textAppearance">@style/regularText</item>
+    </style>
+
+    <style name="refreshButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">@dimen/margin_6dp</item>
+        <item name="android:paddingRight">@dimen/margin_6dp</item>
+        <item name="android:paddingLeft">@dimen/margin_8dp</item>
+        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textAppearance">@style/titleStyle</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="cornerRadius">54dp</item>
     </style>
 
 </resources>
