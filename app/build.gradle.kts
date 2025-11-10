@@ -52,4 +52,5 @@ dependencies {
     implementation (libs.retrofit)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    implementation (libs.androidx.constraintlayout.v200)
 }
