@@ -28,7 +28,7 @@ class SettingsActivity : AppCompatActivity() {
         val supportMessage = findViewById<MaterialTextView>(R.id.supportMessage)
         val userAgreement = findViewById<MaterialTextView>(R.id.userAgreement)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.nightThemeSwitcher)
-        val currentTheme = (applicationContext as App).darkTheme
+        val currentTheme = (applicationContext as App).getDarkTheme()
         themeSwitcher.isChecked = currentTheme
 
         arrowBackIcon.setNavigationOnClickListener {

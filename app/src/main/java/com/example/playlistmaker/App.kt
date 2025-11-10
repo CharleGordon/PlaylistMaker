@@ -34,6 +34,10 @@ class App : Application() {
             .apply()
     }
 
+    fun getDarkTheme(): Boolean {
+        return darkTheme
+    }
+
     companion object {
         const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
         const val DARK_THEME_KEY = "dark_theme_key"

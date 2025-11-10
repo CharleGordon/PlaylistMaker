@@ -19,7 +19,7 @@ class TrackViewHolder (parent: ViewGroup) : RecyclerView.ViewHolder(
     private val trackName : MaterialTextView = itemView.findViewById(R.id.trackName)
     private val artistName: MaterialTextView = itemView.findViewById(R.id.artistName)
     private val trackLenght: MaterialTextView = itemView.findViewById(R.id.trackLenght)
-    val cornerRadiusInPixels = itemView.resources.getDimensionPixelSize(R.dimen.track_image_corner_radius)
+    private val cornerRadiusInPixels = itemView.resources.getDimensionPixelSize(R.dimen.track_image_corner_radius)
 
     fun bind(track: Track) {
         trackName.text = track.trackName
