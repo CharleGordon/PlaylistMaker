@@ -1,7 +1,12 @@
 package com.example.playlistmaker
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -23,6 +28,13 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var releaseYearView: MaterialTextView
     private lateinit var genreView: MaterialTextView
     private lateinit var countryView: MaterialTextView
+    private lateinit var playButton: ImageButton
+    private lateinit var durationView: MaterialTextView
+    private var playerState = STATE_DEFAULT
+    private var mediaPlayer = MediaPlayer()
+    private val handler = android.os.Handler(Looper.getMainLooper())
+    private val updateDurationRunnable = Runnable { updateDuration() }
+    private  var previewUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +50,23 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         if (track != null) {
             fillPlayerData(track)
-        } else {
-
+            playerPrepare(track.previewUrl)
         }
+
+        playButton.setOnClickListener {
+            playbackControl()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+        handler.removeCallbacks(updateDurationRunnable)
     }
 
     private fun initsViews() {
@@ -54,6 +80,8 @@ class AudioPlayerActivity : AppCompatActivity() {
         releaseYearView = findViewById(R.id.releaseYear)
         genreView = findViewById(R.id.primaryGenreName)
         countryView = findViewById(R.id.country)
+        playButton = findViewById(R.id.playTrackButton)
+        durationView = findViewById(R.id.trackDuration)
     }
 
     private fun getTrackFromIntent(): Track? {
@@ -102,7 +130,61 @@ class AudioPlayerActivity : AppCompatActivity() {
         countryView.text = track.country
     }
 
+    private fun playerPrepare(url: String?) {
+        if (url == null) {
+            playButton.isEnabled = false
+            return
+        }
+        mediaPlayer.setDataSource(applicationContext, Uri.parse(url))
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playButton.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playButton.setImageResource(R.drawable.play_track_icon)
+            playerState = STATE_PREPARED
+            durationView.text = "00:00"
+            handler.removeCallbacks(updateDurationRunnable)
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playButton.setImageResource(R.drawable.pause_track_icon)
+        playerState = STATE_PLAYING
+        handler.post(updateDurationRunnable)
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playButton.setImageResource(R.drawable.play_track_icon)
+        playerState = STATE_PAUSED
+        handler.removeCallbacks(updateDurationRunnable)
+    }
+
+    private fun playbackControl() {
+        when(playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    private fun updateDuration() {
+        durationView.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition).toString()
+        handler.postDelayed(updateDurationRunnable, REFRESH_DURATION_DELAY)
+    }
+
     companion object {
         const val TRACK_KEY = "track_data"
+        private const val REFRESH_DURATION_DELAY = 300L
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
     }
 }
