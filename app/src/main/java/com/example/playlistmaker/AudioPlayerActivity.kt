@@ -4,8 +4,8 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
+import android.os.Handler
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -32,9 +32,8 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var durationView: MaterialTextView
     private var playerState = STATE_DEFAULT
     private var mediaPlayer = MediaPlayer()
-    private val handler = android.os.Handler(Looper.getMainLooper())
+    private val handler = Handler(Looper.getMainLooper())
     private val updateDurationRunnable = Runnable { updateDuration() }
-    private  var previewUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,7 +143,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             playButton.setImageResource(R.drawable.play_track_icon)
             playerState = STATE_PREPARED
-            durationView.text = "00:00"
+            durationView.text = resources.getText(R.string.null_track_duration)
             handler.removeCallbacks(updateDurationRunnable)
         }
     }

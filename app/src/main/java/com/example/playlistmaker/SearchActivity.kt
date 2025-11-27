@@ -3,10 +3,10 @@ package com.example.playlistmaker
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -30,9 +30,11 @@ class SearchActivity : AppCompatActivity() {
 
     private enum class SearchResultState {
         SUCCESS,
+        LOADING,
         NO_RESULTS,
         SERVER_ERROR,
-        DEFAULT
+        DEFAULT,
+        HISTORY
     }
 
     private var searchText = ""
@@ -50,7 +52,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private val historyTrackList = mutableListOf<Track>()
     private var isClickAllowed = true
-    private val handler = android.os.Handler(Looper.getMainLooper())
+    private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { performSearch(inputEditText.text.toString()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,28 +74,12 @@ class SearchActivity : AppCompatActivity() {
         trackList = mutableListOf()
         trackAdapter = TrackAdapter(trackList) { track ->
             if(clickDebounce()) {
-                searchHistory.add(track)
-                updateHistoryList()
-
-                val playerIntent = Intent(this, AudioPlayerActivity::class.java)
-                val gson = Gson()
-                val trackJson = gson.toJson(track)
-
-                playerIntent.putExtra(AudioPlayerActivity.TRACK_KEY, trackJson)
-                startActivity(playerIntent)
+                trackToPlayerIntent(track)
             }
         }
         trackHistoryAdapter = TrackAdapter(historyTrackList) { track ->
             if (clickDebounce()) {
-                searchHistory.add(track)
-                updateHistoryList()
-
-                val playerIntent = Intent(this, AudioPlayerActivity::class.java)
-                val gson = Gson()
-                val trackJson = gson.toJson(track)
-
-                playerIntent.putExtra(AudioPlayerActivity.TRACK_KEY, trackJson)
-                startActivity(playerIntent)
+                trackToPlayerIntent(track)
             }
         }
         searchHistoryRecycler.adapter = trackHistoryAdapter
@@ -145,24 +131,20 @@ class SearchActivity : AppCompatActivity() {
                 searchDebounce()
 
                 if (inputEditText.hasFocus() && s?.isEmpty() == true && historyTrackList.isNotEmpty()) {
-                    recyclerView.visibility = View.GONE
-                    placeholderWithoutTextMessage.visibility = View.GONE
-                    placeholderServerErrorMessage.visibility = View.GONE
-                    searchHistoryView.visibility = View.VISIBLE
+                    showPlaceholder(SearchResultState.HISTORY)
                 } else {
                     searchHistoryView.visibility = View.GONE
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
-//                searchText = s?.toString() ?: ""
             }
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
         inputEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty() && historyTrackList.isNotEmpty()) {
-                searchHistoryView.visibility = View.VISIBLE
+                showPlaceholder(SearchResultState.HISTORY)
             } else {
                 searchHistoryView.visibility = View.GONE
             }
@@ -194,42 +176,59 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showPlaceholder(state: SearchResultState) {
         when (state) {
+            SearchResultState.LOADING -> {
+                recyclerView.visibility = View.GONE
+                placeholderWithoutTextMessage.visibility = View.GONE
+                placeholderServerErrorMessage.visibility = View.GONE
+                searchHistoryView.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
+            }
             SearchResultState.SUCCESS -> {
                 recyclerView.visibility = View.VISIBLE
                 placeholderWithoutTextMessage.visibility = View.GONE
                 placeholderServerErrorMessage.visibility = View.GONE
                 searchHistoryView.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
             SearchResultState.NO_RESULTS -> {
                 recyclerView.visibility = View.GONE
                 placeholderWithoutTextMessage.visibility = View.VISIBLE
                 placeholderServerErrorMessage.visibility = View.GONE
                 searchHistoryView.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
             SearchResultState.SERVER_ERROR -> {
                 recyclerView.visibility = View.GONE
                 placeholderWithoutTextMessage.visibility = View.GONE
                 placeholderServerErrorMessage.visibility = View.VISIBLE
                 searchHistoryView.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
             SearchResultState.DEFAULT -> {
                 recyclerView.visibility = View.GONE
                 placeholderWithoutTextMessage.visibility = View.GONE
                 placeholderServerErrorMessage.visibility = View.GONE
+                searchHistoryView.visibility = View.GONE
+                progressBar.visibility = View.GONE
+            }
+            SearchResultState.HISTORY -> {
+                recyclerView.visibility = View.GONE
+                placeholderWithoutTextMessage.visibility = View.GONE
+                placeholderServerErrorMessage.visibility = View.GONE
+                searchHistoryView.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
             }
         }
     }
 
     private fun performSearch(searchText: String) {
 
-        searchHistoryView.visibility = View.GONE
-        progressBar.visibility = View.VISIBLE
+        showPlaceholder(SearchResultState.LOADING)
 
         val searchService = RetrofitClient.searchApi
 
         searchService.search(searchText).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
-                progressBar.visibility = View.GONE
                 if(response.isSuccessful) {
                     val trackResult = response.body()?.results
                     if(!trackResult.isNullOrEmpty()) {
@@ -246,7 +245,6 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                progressBar.visibility = View.GONE
                 showPlaceholder(SearchResultState.SERVER_ERROR)
             }
         })
@@ -269,6 +267,18 @@ class SearchActivity : AppCompatActivity() {
         } else {
             searchHistoryView.visibility = View.GONE
         }
+    }
+
+    private fun trackToPlayerIntent(track: Track) {
+        searchHistory.add(track)
+        updateHistoryList()
+
+        val playerIntent = Intent(this, AudioPlayerActivity::class.java)
+        val gson = Gson()
+        val trackJson = gson.toJson(track)
+
+        playerIntent.putExtra(AudioPlayerActivity.TRACK_KEY, trackJson)
+        startActivity(playerIntent)
     }
 
     private fun clickDebounce() : Boolean {

@@ -39,9 +39,10 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/artistName"
                 style="@style/subtitleGrayText"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="start"
                 android:ellipsize="end"
                 android:maxLines="1"
                 tools:text="test"/>
