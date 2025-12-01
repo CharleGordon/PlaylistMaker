@@ -23,4 +23,5 @@
     <string name="year" translatable="true">Год</string>
     <string name="genre" translatable="true">Жанр</string>
     <string name="region" translatable="true">Страна</string>
+    <string name="null_track_duration">00:00</string>
 </resources>
