@@ -1,5 +1,6 @@
-package com.example.playlistmaker.data
+package com.example.playlistmaker.data.impl
 
+import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.dto.SearchRequest
 import com.example.playlistmaker.data.dto.SearchResponse
 import com.example.playlistmaker.domain.api.TracksRepository
@@ -10,7 +11,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
     override fun searchTracks(text: String): List<Track>? {
         try {
             val response = networkClient.doRequest(SearchRequest(text))
-            if (response.resultCode == 200) {
+            if (response.isSuccessful) {
                 return (response as SearchResponse).results.map {
                     Track(
                         it.trackName,

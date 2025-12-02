@@ -20,21 +20,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.Creator
-import com.example.playlistmaker.presentation.ui.settings.dark_theme.App
+import com.example.playlistmaker.App
 import com.example.playlistmaker.presentation.ui.player.AudioPlayerActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.SearchHistory
-import com.example.playlistmaker.data.dto.SearchResponse
-import com.example.playlistmaker.data.network.RetrofitClient
+import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.TrackInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.ui.tracks.TrackAdapter
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
 
@@ -58,16 +53,16 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryView: ScrollView
     private lateinit var clearSearchHistoryButton: MaterialButton
     private lateinit var refreshButton: Button
-    private lateinit var searchHistory: SearchHistory
     private lateinit var progressBar: ProgressBar
     private lateinit var arrowBackIcon: MaterialToolbar
     private lateinit var clearIcon: ImageView
     private lateinit var searchHistoryRecycler: RecyclerView
+    private lateinit var searchHistoryInteractor: SearchHistoryInteractor
+    private lateinit var trackInteractor: TrackInteractor
     private val historyTrackList = mutableListOf<Track>()
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { performSearch(inputEditText.text.toString()) }
-    private val trackInteractor = Creator.provideTracksInteractor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,14 +72,12 @@ class SearchActivity : AppCompatActivity() {
         applyWindowInsets()
 
         initsViews()
+        initsVars()
 
+        setupListeners()
         setupAdapters()
 
         initSearchHistory()
-
-        updateHistoryList()
-
-        setupListeners()
 
     }
 
@@ -125,6 +118,10 @@ class SearchActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
     }
 
+    private fun initsVars() {
+        searchHistoryInteractor = Creator.provideSearchHistoryInteractor(this)
+    }
+
     private fun setupAdapters() {
         trackList = mutableListOf()
         trackAdapter = TrackAdapter(trackList) { track ->
@@ -143,7 +140,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         clearSearchHistoryButton.setOnClickListener {
-            searchHistory.clear()
+            searchHistoryInteractor.clearHistory()
             historyTrackList.clear()
             trackHistoryAdapter.notifyDataSetChanged()
             searchHistoryView.visibility = View.GONE
@@ -257,6 +254,8 @@ class SearchActivity : AppCompatActivity() {
     private fun performSearch(searchText: String) {
         if (searchText.isEmpty()) return
 
+        trackInteractor = Creator.provideTracksInteractor()
+
         showPlaceholder(SearchResultState.LOADING)
 
         trackInteractor.searchTracks(searchText, object : TrackInteractor.TracksConsumer {
@@ -285,12 +284,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initSearchHistory() {
-        val sharedPref = getSharedPreferences(App.PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPref)
+        updateHistoryList()
     }
 
     private fun updateHistoryList() {
-        val newHistory = searchHistory.read()
+        val newHistory = searchHistoryInteractor.readHistory()
 
         historyTrackList.clear()
         historyTrackList.addAll(newHistory)
@@ -304,7 +302,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun trackToPlayerIntent(track: Track) {
-        searchHistory.add(track)
+        searchHistoryInteractor.addTrackToHistory(track)
         updateHistoryList()
 
         val playerIntent = Intent(this, AudioPlayerActivity::class.java)

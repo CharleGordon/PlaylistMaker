@@ -7,32 +7,47 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.presentation.ui.settings.dark_theme.App
+import com.example.playlistmaker.App
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.ThemeInteractor
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var arrowBackIcon: MaterialToolbar
+    private lateinit var shareApp: MaterialTextView
+    private lateinit var supportMessage: MaterialTextView
+    private lateinit var userAgreement: MaterialTextView
+    private lateinit var themeSwitcher: SwitchMaterial
+    private lateinit var themeInteractor: ThemeInteractor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.settings)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        applyWindowInsets()
 
-        val arrowBackIcon = findViewById<MaterialToolbar>(R.id.toolBar)
-        val shareApp = findViewById<MaterialTextView>(R.id.shareApp)
-        val supportMessage = findViewById<MaterialTextView>(R.id.supportMessage)
-        val userAgreement = findViewById<MaterialTextView>(R.id.userAgreement)
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.nightThemeSwitcher)
-        val currentTheme = (applicationContext as App).getDarkTheme()
-        themeSwitcher.isChecked = currentTheme
+        initsViews()
+        setupVars()
 
+        setCurrentTheme()
+
+        setupListeners()
+    }
+
+    private fun initsViews() {
+        arrowBackIcon = findViewById(R.id.toolBar)
+        shareApp = findViewById(R.id.shareApp)
+        supportMessage = findViewById(R.id.supportMessage)
+        userAgreement = findViewById(R.id.userAgreement)
+        themeSwitcher = findViewById(R.id.nightThemeSwitcher)
+    }
+
+    private fun setupListeners() {
         arrowBackIcon.setNavigationOnClickListener {
             finish()
         }
@@ -63,8 +78,24 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
+        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+            themeInteractor.switchTheme(isChecked)
+        }
+    }
+
+    private fun setupVars() {
+        themeInteractor = Creator.provideThemeInteractor(this)
+    }
+
+    private fun setCurrentTheme() {
+        themeSwitcher.isChecked = themeInteractor.isDarkTheme()
+    }
+
+    private fun applyWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.settings)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
     }
 }

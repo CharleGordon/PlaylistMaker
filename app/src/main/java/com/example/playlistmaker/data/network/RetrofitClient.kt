@@ -21,9 +21,9 @@ class RetrofitClient : NetworkClient {
 
             val body = response.body() ?: Response()
 
-            return body.apply { resultCode = response.code() }
+            return body.apply { isSuccessful = response.isSuccessful }
         } else {
-            return Response().apply { resultCode = 400 }
+            return Response().apply { isSuccessful = false }
         }
     }
 
