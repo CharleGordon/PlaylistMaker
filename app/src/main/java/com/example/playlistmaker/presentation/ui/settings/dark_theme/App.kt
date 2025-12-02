@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.settings.dark_theme
 
 import android.app.Application
 import android.content.SharedPreferences

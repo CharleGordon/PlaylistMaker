@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.player
 
 import android.media.MediaPlayer
 import android.net.Uri
@@ -9,8 +9,12 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
@@ -39,22 +43,14 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.audio_player_view)
 
+        applyWindowInsets()
+
         initsViews()
 
-        cancelView.setNavigationOnClickListener {
-            finish()
-        }
+        setupListeners()
 
-        val track = getTrackFromIntent()
+        trackToPlayerFill()
 
-        if (track != null) {
-            fillPlayerData(track)
-            playerPrepare(track.previewUrl)
-        }
-
-        playButton.setOnClickListener {
-            playbackControl()
-        }
     }
 
     override fun onPause() {
@@ -81,6 +77,33 @@ class AudioPlayerActivity : AppCompatActivity() {
         countryView = findViewById(R.id.country)
         playButton = findViewById(R.id.playTrackButton)
         durationView = findViewById(R.id.trackDuration)
+    }
+
+    private fun applyWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.audioPlayerView)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
+    private fun setupListeners() {
+        cancelView.setNavigationOnClickListener {
+            finish()
+        }
+
+        playButton.setOnClickListener {
+            playbackControl()
+        }
+    }
+
+    private fun trackToPlayerFill() {
+        val track = getTrackFromIntent()
+
+        if (track != null) {
+            fillPlayerData(track)
+            playerPrepare(track.previewUrl)
+        }
     }
 
     private fun getTrackFromIntent(): Track? {
