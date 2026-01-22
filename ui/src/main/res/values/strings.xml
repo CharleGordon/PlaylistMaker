@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Playlist maker</string>
+    <string name="search" translatable="true">Поиск</string>
+    <string name="media" translatable="true">Медиатека</string>
+    <string name="settings" translatable="true">Настройки</string>
+    <string name="dark_theme" translatable="true">Темная тема</string>
+    <string name="share_app" translatable="true">Поделиться приложением</string>
+    <string name="text_support" translatable="true">Написать в поддержку</string>
+    <string name="user_agreement" translatable="true">Пользовательское соглашение</string>
+    <string name="placeholder_without_results" translatable="true">Ничего не нашлось</string>
+    <string name="placeholder_server_error_title" translatable="true">Проблемы со связью</string>
+    <string name="placeholder_server_error_loading" translatable="true">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="refresh" translatable="true">Обновить</string>
+    <string name="search_history_text" translatable="true">Вы искали</string>
+    <string name="clear_search_history" translatable="true">Очистить историю</string>
+    <string name="length" translatable="true">Длительность</string>
+    <string name="album" translatable="true">Альбом</string>
+    <string name="year" translatable="true">Год</string>
+    <string name="genre" translatable="true">Жанр</string>
+    <string name="region" translatable="true">Страна</string>
+    <string name="null_track_duration">00:00</string>
+</resources>

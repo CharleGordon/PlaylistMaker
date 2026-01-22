@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="share_course_text" translatable="false">https://practicum.yandex.ru/android-developer/?from=catalog</string>
+    <string name="user_agreement_url" translatable="false">https://yandex.ru/legal/practicum_offer/ru/</string>
+    <string name="support_email" translatable="false">Frad551@yandex.ru</string>
+    <string name="support_theme_text" translatable="true">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="support_text" translatable="true">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+</resources>
