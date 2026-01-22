@@ -1,31 +1,18 @@
 package com.example.playlistmaker.presentation.ui.settings
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.domain.api.ThemeInteractor
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.presentation.viewmodel.settings.SettingsActivityViewModel
-import com.example.playlistmaker.presentation.viewmodel.settings.SettingsViewModelFactory
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.google.android.material.textview.MaterialTextView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val viewModel: SettingsActivityViewModel by viewModels {
-        SettingsViewModelFactory(
-            sharingInteractor = Creator.provideSharingInteractor(this),
-            themeInteractor = Creator.provideThemeInteractor(this)
-        )
-    }
+    private val viewModel by viewModel<SettingsActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

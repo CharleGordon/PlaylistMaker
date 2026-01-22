@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.domain.models.AudioPlayerState
@@ -76,12 +77,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         val trackJson = intent.getStringExtra(TRACK_KEY)
 
-        return if (trackJson != null) {
-            val gson = Gson()
-            gson.fromJson(trackJson, Track::class.java)
-        } else {
-            null
-        }
+        return trackJson?.let { Gson().fromJson(it, Track::class.java) }
     }
 
     private fun fillPlayerData(track: Track) {
@@ -100,16 +96,16 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         if (track.collectionName != null) {
             bindind.collectionName.text = track.collectionName
-            bindind.albumGroup.visibility = View.VISIBLE
+            bindind.albumGroup.isVisible = true
         } else {
-            bindind.albumGroup.visibility = View.GONE
+            bindind.albumGroup.isVisible= false
         }
 
         if (track.releaseDate != null) {
-            bindind.releaseYear.text = track.releaseDate!!.substring(0, 4)
-            bindind.yearGroup.visibility = View.VISIBLE
+            bindind.releaseYear.text = track.releaseDate?.substring(0, 4).orEmpty()
+            bindind.yearGroup.isVisible = true
         } else {
-            bindind.yearGroup.visibility = View.GONE
+            bindind.yearGroup.isVisible = false
         }
 
         bindind.primaryGenreName.text = track.primaryGenreName

@@ -1,30 +1,23 @@
 package com.example.playlistmaker.presentation.ui.search
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
 import android.os.Handler
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import com.example.playlistmaker.Creator
-import com.example.playlistmaker.presentation.ui.player.AudioPlayerActivity
+import androidx.core.widget.doOnTextChanged
 import com.example.playlistmaker.R
-import com.example.domain.models.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.presentation.ui.tracks.TrackAdapter
 import com.example.playlistmaker.presentation.viewmodel.search.SearchActivityViewModel
-import com.example.playlistmaker.presentation.viewmodel.search.SearchActivityViewModelFactory
 import com.example.playlistmaker.utils.ActivityNavigator
 import com.example.playlistmaker.utils.SearchState
-import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -34,12 +27,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivitySearchBinding
-    private val viewModel: SearchActivityViewModel by viewModels {
-        SearchActivityViewModelFactory(
-            Creator.provideTracksInteractor(),
-            Creator.provideSearchHistoryInteractor(this)
-        )
-    }
+    private val viewModel by viewModel<SearchActivityViewModel>()
     private var searchText = ""
     private lateinit var inputEditText: EditText
     private lateinit var trackAdapter: TrackAdapter
@@ -168,21 +156,10 @@ class SearchActivity : AppCompatActivity() {
             viewModel.onClearSearchClicked()
         }
 
-        val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.clearIcon.visibility = clearButtonVisibility(s)
-                viewModel.searchDebounce(s.toString())
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
+        binding.inputSearchText.doOnTextChanged { text, _, _, _ ->
+            binding.clearIcon.visibility = clearButtonVisibility(text)
+            viewModel.searchDebounce(text.toString())
         }
-
-        binding.inputSearchText.addTextChangedListener(simpleTextWatcher)
 
         binding.inputSearchText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.inputSearchText.text.isEmpty()) {
