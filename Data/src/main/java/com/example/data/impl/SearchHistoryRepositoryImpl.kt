@@ -10,6 +10,11 @@ class SearchHistoryRepositoryImpl(
     private val gson: Gson
 ) : SearchHistoryRepository {
 
+    companion object {
+        const val SEARCH_HISTORY_KEY = "search_history_key"
+        const val MAX_HISTORY_SIZE = 10
+    }
+
     override fun readHistory(): List<Track> {
         val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, null)
 
@@ -34,8 +39,4 @@ class SearchHistoryRepositoryImpl(
             .apply()
     }
 
-    companion object {
-        const val SEARCH_HISTORY_KEY = "search_history_key"
-        const val MAX_HISTORY_SIZE = 10
-    }
 }
