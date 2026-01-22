@@ -20,4 +20,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Playlist Maker"
-include(":app")
+include(":ui")
+include(":Data")
+include(":Domain")
