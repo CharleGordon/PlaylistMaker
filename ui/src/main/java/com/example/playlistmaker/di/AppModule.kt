@@ -1,6 +1,9 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.presentation.viewmodel.main.MainActivityViewModel
+import com.example.playlistmaker.presentation.viewmodel.media.FavoriteTracksFragmentViewModel
+import com.example.playlistmaker.presentation.viewmodel.media.MediaActivityViewModel
+import com.example.playlistmaker.presentation.viewmodel.media.PlaylistFragmentViewModel
 import com.example.playlistmaker.presentation.viewmodel.player.AudioPlayerActivityViewModel
 import com.example.playlistmaker.presentation.viewmodel.search.SearchActivityViewModel
 import com.example.playlistmaker.presentation.viewmodel.settings.SettingsActivityViewModel
@@ -29,5 +32,17 @@ val appModule = module {
             sharingInteractor = get(),
             themeInteractor = get()
         )
+    }
+
+    viewModel<MediaActivityViewModel> {
+        MediaActivityViewModel()
+    }
+
+    viewModel<PlaylistFragmentViewModel> {
+        PlaylistFragmentViewModel()
+    }
+
+    viewModel<FavoriteTracksFragmentViewModel> {
+        FavoriteTracksFragmentViewModel()
     }
 }

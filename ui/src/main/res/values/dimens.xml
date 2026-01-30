@@ -27,8 +27,11 @@
     <dimen name="margin_30dp">30dp</dimen>
     <dimen name="margin_31dp">31dp</dimen>
     <dimen name="margin_39dp">39dp</dimen>
+    <dimen name="margin_46dp">46dp</dimen>
     <dimen name="margin_102dp">102dp</dimen>
+    <dimen name="margin_106dp">106dp</dimen>
     <dimen name="margin_140dp">140dp</dimen>
+    <dimen name="margin_148dp">148dp</dimen>
     <dimen name="track_image_corner_radius">2dp</dimen>
 
 </resources>

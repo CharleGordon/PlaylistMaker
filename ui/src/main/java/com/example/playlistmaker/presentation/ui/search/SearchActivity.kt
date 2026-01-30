@@ -13,7 +13,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.presentation.ui.tracks.TrackAdapter
+import com.example.playlistmaker.presentation.ui.adapters.tracks.TrackAdapter
 import com.example.playlistmaker.presentation.viewmodel.search.SearchActivityViewModel
 import com.example.playlistmaker.utils.ActivityNavigator
 import com.example.playlistmaker.utils.SearchState
