@@ -7,7 +7,7 @@ import com.example.domain.api.ThemeInteractor
 import com.example.domain.api.SharingInteractor
 import com.example.domain.models.ThemeSettings
 
-class SettingsActivityViewModel(
+class SettingsFragmentViewModel(
     private val sharingInteractor: SharingInteractor,
     private val themeInteractor: ThemeInteractor
 ) : ViewModel() {

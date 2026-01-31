@@ -7,14 +7,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/colorPrimary"
-    tools:context=".presentation.ui.search.SearchActivity">
+    tools:context=".presentation.ui.search.SearchFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/searchArrowBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_4dp"
-        app:navigationIcon="@drawable/arrow_back"
         app:title="@string/search"
         app:titleTextAppearance="@style/titleStyle"
         style="@style/iconColorBlack"/>
