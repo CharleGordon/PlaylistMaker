@@ -4,20 +4,18 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.domain.api.SearchHistoryInteractor
 import com.example.domain.api.TrackInteractor
 import com.example.domain.models.Track
 import com.example.playlistmaker.utils.SearchState
 
-class SearchActivityViewModel(
+class SearchFragmentViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val trackInteractor: TrackInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
-
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
 
     private val handler = Handler(Looper.getMainLooper())
     private var lastSearchText: String? = null
@@ -29,6 +27,7 @@ class SearchActivityViewModel(
     private val stateLiveData = MutableLiveData<SearchState>()
     val state: LiveData<SearchState> = stateLiveData
     private var lastLoadedState: SearchState.Content? = null
+    val searchText = savedStateHandle.getLiveData<String>(KEY_SEARCH_TEXT, "")
 
     init {
         showHistory()
@@ -102,5 +101,14 @@ class SearchActivityViewModel(
         } else {
             showHistory()
         }
+    }
+
+    fun updateSearchText(text: String) {
+        savedStateHandle[KEY_SEARCH_TEXT] = text
+    }
+
+    companion object {
+        const val KEY_SEARCH_TEXT = "SEARCH_TEXT"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

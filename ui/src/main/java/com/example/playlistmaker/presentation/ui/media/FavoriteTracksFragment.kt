@@ -11,16 +11,17 @@ import com.example.playlistmaker.presentation.viewmodel.media.FavoriteTracksFrag
 
 class FavoriteTracksFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = FavoriteTracksFragment()
-    }
-
-    private lateinit var binding: FavoriteTracksFragmentBinding
+    private var _binding: FavoriteTracksFragmentBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: FavoriteTracksFragmentViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        binding = FavoriteTracksFragmentBinding.inflate(inflater, container, false)
+        _binding = FavoriteTracksFragmentBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    companion object {
+        fun newInstance() = FavoriteTracksFragment()
     }
 }

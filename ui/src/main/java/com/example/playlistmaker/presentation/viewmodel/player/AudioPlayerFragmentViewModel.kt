@@ -11,11 +11,7 @@ import com.example.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class AudioPlayerActivityViewModel: ViewModel() {
-
-    companion object {
-        private const val REFRESH_DURATION_DELAY = 300L
-    }
+class AudioPlayerFragmentViewModel: ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<AudioPlayerState>()
     val playerState: LiveData<AudioPlayerState> = playerStateLiveData
@@ -73,6 +69,10 @@ class AudioPlayerActivityViewModel: ViewModel() {
         super.onCleared()
         mediaPlayer.release()
         handler.removeCallbacks(updateTimeRunnable)
+    }
+
+    companion object {
+        private const val REFRESH_DURATION_DELAY = 300L
     }
 
 }
