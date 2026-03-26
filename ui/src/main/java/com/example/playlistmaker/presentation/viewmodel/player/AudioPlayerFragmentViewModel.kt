@@ -6,8 +6,13 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.example.domain.models.AudioPlayerState
 import com.example.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -17,11 +22,10 @@ class AudioPlayerFragmentViewModel: ViewModel() {
     val playerState: LiveData<AudioPlayerState> = playerStateLiveData
 
     private val mediaPlayer = MediaPlayer()
-    private val handler = Handler(Looper.getMainLooper())
-    private val updateTimeRunnable = Runnable { updatePlaybackTime() }
+    private var timerJob: Job? = null
 
     fun preparePlayer(track: Track) {
-        playerStateLiveData.value = AudioPlayerState(track = track)
+        playerStateLiveData.value = AudioPlayerState(track = track, playbackTime = "00:00")
 
         mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()
@@ -31,7 +35,7 @@ class AudioPlayerFragmentViewModel: ViewModel() {
             )
         }
         mediaPlayer.setOnCompletionListener {
-            handler.removeCallbacks(updateTimeRunnable)
+            stopTimer()
             playerStateLiveData.postValue(
                 playerStateLiveData.value?.copy(isPlaying = false, playbackTime = "00:00")
             )
@@ -50,25 +54,36 @@ class AudioPlayerFragmentViewModel: ViewModel() {
     private fun startPlayer() {
         mediaPlayer.start()
         playerStateLiveData.postValue(playerStateLiveData.value?.copy(isPlaying = true))
-        handler.post(updateTimeRunnable)
+        startTimer()
     }
 
-    fun pausePlayer() {
+    private fun pausePlayer() {
         mediaPlayer.pause()
         playerStateLiveData.postValue(playerStateLiveData.value?.copy(isPlaying = false))
-        handler.removeCallbacks(updateTimeRunnable)
+        stopTimer()
     }
 
-    private fun updatePlaybackTime() {
-        val formattedTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
-        playerStateLiveData.postValue(playerStateLiveData.value?.copy(playbackTime = formattedTime))
-        handler.postDelayed(updateTimeRunnable, REFRESH_DURATION_DELAY)
+    private fun startTimer() {
+        timerJob?.cancel()
+        timerJob = viewModelScope.launch {
+            while (mediaPlayer.isPlaying) {
+                delay(REFRESH_DURATION_DELAY)
+                val formattedTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+
+                playerStateLiveData.postValue(playerStateLiveData.value?.copy(playbackTime = formattedTime))
+
+            }
+        }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
     }
 
     override fun onCleared() {
         super.onCleared()
         mediaPlayer.release()
-        handler.removeCallbacks(updateTimeRunnable)
+        stopTimer()
     }
 
     companion object {

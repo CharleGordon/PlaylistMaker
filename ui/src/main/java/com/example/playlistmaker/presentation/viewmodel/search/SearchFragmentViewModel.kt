@@ -1,15 +1,19 @@
 package com.example.playlistmaker.presentation.viewmodel.search
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.domain.api.SearchHistoryInteractor
 import com.example.domain.api.TrackInteractor
 import com.example.domain.models.Track
 import com.example.playlistmaker.utils.SearchState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.launchIn
 
 class SearchFragmentViewModel(
     private val savedStateHandle: SavedStateHandle,
@@ -17,12 +21,10 @@ class SearchFragmentViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
-    private val handler = Handler(Looper.getMainLooper())
+    private var searchJob: Job? = null
+    private var clickJob: Job? = null
+
     private var lastSearchText: String? = null
-    private val searchRunnable = Runnable {
-        val newSearchText = lastSearchText ?: ""
-        searchRequest(newSearchText)
-    }
 
     private val stateLiveData = MutableLiveData<SearchState>()
     val state: LiveData<SearchState> = stateLiveData
@@ -35,7 +37,7 @@ class SearchFragmentViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        handler.removeCallbacks(searchRunnable)
+        searchJob?.cancel()
     }
 
     fun searchDebounce(searchText: String) {
@@ -43,30 +45,54 @@ class SearchFragmentViewModel(
             return
         }
         this.lastSearchText = searchText
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            searchRequest(searchText)
+        }
+    }
+
+    fun clickDebounce(): Boolean {
+        val current = clickJob
+        if (current == null || !current.isActive) {
+            clickJob = viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+            }
+            return true
+        }
+        return false
     }
 
     fun searchRequest(searchText: String) {
         if (searchText.isNotEmpty()) {
             stateLiveData.postValue(SearchState.Loading)
 
-            trackInteractor.searchTracks(searchText, object : TrackInteractor.TracksConsumer {
-                override fun consume(foundTracks: List<Track>?) {
-                    handler.post {
-                        if (foundTracks != null) {
-                            if (foundTracks.isNotEmpty()) {
-                                lastLoadedState = SearchState.Content(foundTracks)
-                                stateLiveData.postValue(lastLoadedState!!)
-                            } else {
-                                stateLiveData.postValue(SearchState.Error("Ничего не нашлось"))
-                            }
-                        } else {
-                            stateLiveData.postValue(SearchState.Error("Ошибка сети"))
-                        }
+            viewModelScope.launch {
+                trackInteractor
+                    .searchTracks(searchText)
+                    .onEach { pair ->
+                        processResult(pair.first, pair.second)
                     }
-                }
-            })
+                    .launchIn(viewModelScope)
+            }
+        }
+    }
+
+    private fun processResult(foundTracks: List<Track>?, errorMessage: String?) {
+        when {
+            errorMessage != null -> {
+                stateLiveData.postValue(SearchState.Error("Ошибка сети"))
+            }
+
+            foundTracks.isNullOrEmpty() -> {
+                stateLiveData.postValue(SearchState.Error("Ничего не нашлось"))
+            }
+
+            else -> {
+                lastLoadedState = SearchState.Content(foundTracks)
+                stateLiveData.postValue(lastLoadedState!!)
+            }
         }
     }
 
@@ -89,7 +115,7 @@ class SearchFragmentViewModel(
     }
 
     fun onClearSearchClicked() {
-        handler.removeCallbacks(searchRunnable)
+        searchJob?.cancel()
         lastSearchText = null
         lastLoadedState = null
         showHistory()
@@ -110,5 +136,6 @@ class SearchFragmentViewModel(
     companion object {
         const val KEY_SEARCH_TEXT = "SEARCH_TEXT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

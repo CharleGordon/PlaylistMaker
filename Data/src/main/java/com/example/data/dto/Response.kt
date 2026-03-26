@@ -1,5 +1,5 @@
 package com.example.data.dto
 
 open class Response() {
-    var isSuccessful = true
+    var resultCode = 200
 }
