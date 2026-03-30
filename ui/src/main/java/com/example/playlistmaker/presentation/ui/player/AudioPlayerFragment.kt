@@ -13,7 +13,6 @@ import com.example.domain.models.AudioPlayerState
 import com.example.domain.models.Track
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
-import com.example.playlistmaker.databinding.FragmentMediaBinding
 import com.example.playlistmaker.presentation.ui.root.RootActivity
 import com.example.playlistmaker.presentation.viewmodel.player.AudioPlayerFragmentViewModel
 import com.google.gson.Gson
