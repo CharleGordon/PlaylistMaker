@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.domain.models.AudioPlayerState
@@ -16,12 +15,13 @@ import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.presentation.ui.root.RootActivity
 import com.example.playlistmaker.presentation.viewmodel.player.AudioPlayerFragmentViewModel
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerFragment : Fragment() {
 
-    private val viewModel: AudioPlayerFragmentViewModel by viewModels()
+    private val viewModel by viewModel<AudioPlayerFragmentViewModel>()
     private var _binding: FragmentAudioPlayerBinding? = null
     private val binding get() = _binding!!
 
@@ -38,10 +38,16 @@ class AudioPlayerFragment : Fragment() {
         val track = getTrackFromArguments()
         if (track != null) {
             viewModel.preparePlayer(track)
+            viewModel.checkFavorite(track.trackId)
         }
 
         viewModel.playerState.observe(viewLifecycleOwner) { state ->
             render(state)
+        }
+
+        viewModel.favoriteLiveData.observe(viewLifecycleOwner) { state ->
+            val favoriteIconRes = if (state) R.drawable.active_favorite_button else R.drawable.like_track_button
+            binding.likeTrackButton.setImageResource(favoriteIconRes)
         }
     }
 
@@ -82,6 +88,9 @@ class AudioPlayerFragment : Fragment() {
         }
         binding.playTrackButton.setOnClickListener {
             viewModel.onPlayButtonClicked()
+        }
+        binding.likeTrackButton.setOnClickListener {
+            getTrackFromArguments()?.let { it1 -> viewModel.onFavoriteClicked(it1) }
         }
     }
 

@@ -24,7 +24,9 @@
         android:layout_gravity="center_vertical"
         android:layout_marginTop="@dimen/margin_24dp"
         android:paddingEnd="@dimen/margin_6dp"
-        android:text="@string/dark_theme" />
+        android:text="@string/dark_theme"
+        app:thumbTint="@color/switch_thumb_selector"
+        app:trackTint="@color/switch_track_selector"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/shareApp"

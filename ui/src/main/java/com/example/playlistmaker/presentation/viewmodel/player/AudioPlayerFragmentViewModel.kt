@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.example.domain.api.FavoritesInteractor
 import com.example.domain.models.AudioPlayerState
 import com.example.domain.models.Track
 import kotlinx.coroutines.Job
@@ -16,13 +17,35 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class AudioPlayerFragmentViewModel: ViewModel() {
+class AudioPlayerFragmentViewModel(
+    private val favoritesInteractor: FavoritesInteractor
+): ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<AudioPlayerState>()
     val playerState: LiveData<AudioPlayerState> = playerStateLiveData
+    private val _favoriteLiveData = MutableLiveData<Boolean>()
+    val favoriteLiveData: LiveData<Boolean> = _favoriteLiveData
 
     private val mediaPlayer = MediaPlayer()
     private var timerJob: Job? = null
+
+    fun checkFavorite(trackId: Int) {
+        viewModelScope.launch {
+            _favoriteLiveData.postValue(favoritesInteractor.isFavorite(trackId))
+        }
+    }
+
+    fun onFavoriteClicked(track: Track) {
+        viewModelScope.launch {
+            if (favoriteLiveData.value == true) {
+                favoritesInteractor.removeTrack(track)
+                _favoriteLiveData.postValue(false)
+            } else {
+                favoritesInteractor.addTrack(track)
+                _favoriteLiveData.postValue(true)
+            }
+        }
+    }
 
     fun preparePlayer(track: Track) {
         playerStateLiveData.value = AudioPlayerState(track = track, playbackTime = "00:00")

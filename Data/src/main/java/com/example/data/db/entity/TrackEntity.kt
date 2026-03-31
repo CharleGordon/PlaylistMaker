@@ -1,6 +1,11 @@
-package com.example.domain.models
+package com.example.data.db.entity
 
-data class Track(
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "favorite_tracks_table")
+data class TrackEntity(
+    @PrimaryKey
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,
@@ -10,5 +15,6 @@ data class Track(
     val releaseDate: String?,
     val primaryGenreName: String,
     val country: String,
-    val previewUrl: String
+    val previewUrl: String,
+    val insertionTime: Long
 )
