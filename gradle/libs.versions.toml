@@ -6,6 +6,7 @@ glide = "4.14.2"
 gson = "2.10"
 koinAndroid = "3.3.0"
 kotlin = "1.9.24"
+ksp = "1.9.24-1.0.20"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -18,7 +19,6 @@ constraintlayout = "2.2.1"
 navigationFragmentKtx = "2.5.3"
 retrofit = "2.9.0"
 jetbrainsKotlinJvm = "1.9.24"
-appcompatVersion = "1.7.1"
 viewpager2 = "1.1.0"
 
 [libraries]
@@ -43,11 +43,11 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 

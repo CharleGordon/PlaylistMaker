@@ -2,13 +2,17 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
+import com.example.data.converters.TrackDbConvertor
 import com.example.data.impl.ExternalNavigator
+import com.example.data.impl.FavoritesRepositoryImpl
 import com.example.data.impl.SearchHistoryRepositoryImpl
 import com.example.data.impl.ThemeRepositoryImpl
 import com.example.data.impl.TracksRepositoryImpl
 import com.example.data.network.NetworkClient
 import com.example.data.network.RetrofitClient
 import com.example.data.network.SearchApiService
+import com.example.domain.api.FavoritesRepository
 import com.example.domain.api.SearchHistoryRepository
 import com.example.domain.api.SharingRepository
 import com.example.domain.api.ThemeRepository
@@ -23,6 +27,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 const val ITUNES_BASE_URL = "https://itunes.apple.com"
 
 val dataModule = module {
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
+    }
+
+    single { get<AppDatabase>().favoriteTracksDao() }
+
+    factory { TrackDbConvertor() }
 
     single<SearchApiService> {
         Retrofit.Builder()
@@ -58,6 +71,10 @@ val dataModule = module {
 
     single<SharingRepository> {
         ExternalNavigator(context = androidContext())
+    }
+
+    single<FavoritesRepository> {
+        FavoritesRepositoryImpl(favoriteTracksDao = get(), trackDbConvertor = get())
     }
 
 }

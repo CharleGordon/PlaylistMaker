@@ -13,7 +13,9 @@ import org.koin.dsl.module
 val appModule = module {
 
     viewModel<AudioPlayerFragmentViewModel> {
-        AudioPlayerFragmentViewModel()
+        AudioPlayerFragmentViewModel(
+            favoritesInteractor = get()
+        )
     }
 
     viewModel<SearchFragmentViewModel> { (handle: SavedStateHandle) ->
@@ -40,6 +42,8 @@ val appModule = module {
     }
 
     viewModel<FavoriteTracksFragmentViewModel> {
-        FavoriteTracksFragmentViewModel()
+        FavoriteTracksFragmentViewModel(
+            favoritesInteractor = get()
+        )
     }
 }

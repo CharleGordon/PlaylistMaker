@@ -37,6 +37,7 @@
         android:background="@drawable/search_background"
         android:maxLines="1"
         android:inputType="text"
+        android:textCursorDrawable="@drawable/custom_cursor"
         android:textAppearance="@style/regularText"
         android:textColor="@color/black"
         style="@style/searchStyle" />

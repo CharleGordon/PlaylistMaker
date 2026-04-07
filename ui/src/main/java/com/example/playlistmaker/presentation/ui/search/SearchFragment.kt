@@ -1,8 +1,6 @@
 package com.example.playlistmaker.presentation.ui.search
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +9,13 @@ import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.presentation.ui.adapters.tracks.TrackAdapter
 import com.example.playlistmaker.presentation.ui.player.AudioPlayerFragment
 import com.example.playlistmaker.presentation.viewmodel.search.SearchFragmentViewModel
+import com.example.playlistmaker.utils.Debounce
 import com.example.playlistmaker.utils.SearchState
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,6 +24,7 @@ class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+    private val debounce: Debounce = Debounce()
     private val viewModel by viewModel<SearchFragmentViewModel>()
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var trackHistoryAdapter: TrackAdapter
@@ -100,14 +98,14 @@ class SearchFragment : Fragment() {
 
     private fun setupAdapters() {
         trackAdapter = TrackAdapter(mutableListOf()) { track ->
-            if(viewModel.clickDebounce()) {
+            if(debounce.clickDebounce()) {
                 val trackJson = Gson().toJson(track)
                 viewModel.onTrackClicked(track)
                 findNavController().navigate(R.id.action_searchFragment2_to_audioPlayerFragment, AudioPlayerFragment.createArgs(trackJson))
             }
         }
         trackHistoryAdapter = TrackAdapter(mutableListOf()) { track ->
-            if (viewModel.clickDebounce()) {
+            if (debounce.clickDebounce()) {
                 val trackJson = Gson().toJson(track)
                 viewModel.onTrackClicked(track)
                 findNavController().navigate(R.id.action_searchFragment2_to_audioPlayerFragment, AudioPlayerFragment.createArgs(trackJson))

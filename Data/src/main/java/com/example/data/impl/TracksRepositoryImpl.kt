@@ -27,7 +27,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                             it.artistName,
                             it.trackTimeMillis,
                             it.artworkUrl100,
-                            it.trackId.toString(),
+                            it.trackId,
                             it.collectionName,
                             it.releaseDate,
                             it.primaryGenreName,
