@@ -3,6 +3,7 @@ package com.example.playlistmaker.di
 import androidx.lifecycle.SavedStateHandle
 import com.example.playlistmaker.presentation.viewmodel.media.FavoriteTracksFragmentViewModel
 import com.example.playlistmaker.presentation.viewmodel.media.MediaFragmentViewModel
+import com.example.playlistmaker.presentation.viewmodel.media.NewPlaylistViewModel
 import com.example.playlistmaker.presentation.viewmodel.media.PlaylistFragmentViewModel
 import com.example.playlistmaker.presentation.viewmodel.player.AudioPlayerFragmentViewModel
 import com.example.playlistmaker.presentation.viewmodel.search.SearchFragmentViewModel
@@ -14,7 +15,8 @@ val appModule = module {
 
     viewModel<AudioPlayerFragmentViewModel> {
         AudioPlayerFragmentViewModel(
-            favoritesInteractor = get()
+            favoritesInteractor = get(),
+            playlistInteractor = get()
         )
     }
 
@@ -38,12 +40,18 @@ val appModule = module {
     }
 
     viewModel<PlaylistFragmentViewModel> {
-        PlaylistFragmentViewModel()
+        PlaylistFragmentViewModel(interactor = get())
     }
 
     viewModel<FavoriteTracksFragmentViewModel> {
         FavoriteTracksFragmentViewModel(
             favoritesInteractor = get()
+        )
+    }
+
+    viewModel<NewPlaylistViewModel> {
+        NewPlaylistViewModel(
+            interactor = get()
         )
     }
 }

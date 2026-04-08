@@ -1,33 +1,48 @@
 package com.example.playlistmaker.presentation.viewmodel.player
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.domain.api.FavoritesInteractor
+import com.example.domain.api.PlaylistInteractor
 import com.example.domain.models.AudioPlayerState
+import com.example.domain.models.Playlist
 import com.example.domain.models.Track
+import com.example.playlistmaker.utils.AddingStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerFragmentViewModel(
-    private val favoritesInteractor: FavoritesInteractor
+    private val favoritesInteractor: FavoritesInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ): ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<AudioPlayerState>()
     val playerState: LiveData<AudioPlayerState> = playerStateLiveData
     private val _favoriteLiveData = MutableLiveData<Boolean>()
     val favoriteLiveData: LiveData<Boolean> = _favoriteLiveData
+    private val _playlistsLiveData = MutableLiveData<List<Playlist>>()
+    val playlistsLiveData: LiveData<List<Playlist>> = _playlistsLiveData
+    private val _addingResult = MutableLiveData<Pair<AddingStatus, String>>()
+    val addingResult: LiveData<Pair<AddingStatus, String>> = _addingResult
 
     private val mediaPlayer = MediaPlayer()
     private var timerJob: Job? = null
+
+    fun fillData() {
+        playlistInteractor.getAllPlaylists()
+            .onEach { playlists ->
+                _playlistsLiveData.postValue(playlists)
+            }
+            .launchIn(viewModelScope)
+    }
 
     fun checkFavorite(trackId: Int) {
         viewModelScope.launch {
@@ -43,6 +58,18 @@ class AudioPlayerFragmentViewModel(
             } else {
                 favoritesInteractor.addTrack(track)
                 _favoriteLiveData.postValue(true)
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(track: Track?, playlist: Playlist) {
+        if (playlist.trackIds.contains(track?.trackId?.toLong())) {
+            _addingResult.postValue(AddingStatus.ALREADY_EXISTS to playlist.title)
+        } else {
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(track, playlist)
+                _addingResult.postValue(AddingStatus.ADDED to playlist.title)
+                fillData()
             }
         }
     }
@@ -80,7 +107,7 @@ class AudioPlayerFragmentViewModel(
         startTimer()
     }
 
-    private fun pausePlayer() {
+    fun pausePlayer() {
         mediaPlayer.pause()
         playerStateLiveData.postValue(playerStateLiveData.value?.copy(isPlaying = false))
         stopTimer()

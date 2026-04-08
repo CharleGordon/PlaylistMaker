@@ -22,7 +22,6 @@ class SearchFragmentViewModel(
 ) : ViewModel() {
 
     private var searchJob: Job? = null
-//    private var clickJob: Job? = null
 
     private var lastSearchText: String? = null
 
@@ -52,17 +51,6 @@ class SearchFragmentViewModel(
             searchRequest(searchText)
         }
     }
-
-//    fun clickDebounce(): Boolean {
-//        val current = clickJob
-//        if (current == null || !current.isActive) {
-//            clickJob = viewModelScope.launch {
-//                delay(CLICK_DEBOUNCE_DELAY)
-//            }
-//            return true
-//        }
-//        return false
-//    }
 
     fun searchRequest(searchText: String) {
         if (searchText.isNotEmpty()) {
@@ -136,6 +124,5 @@ class SearchFragmentViewModel(
     companion object {
         const val KEY_SEARCH_TEXT = "SEARCH_TEXT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-//        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

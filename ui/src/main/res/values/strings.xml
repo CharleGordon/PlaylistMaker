@@ -24,4 +24,17 @@
     <string name="new_playlist" translatable="true">Новый плейлист</string>
     <string name="playlists" translatable="true">Плейлисты</string>
     <string name="favorite_tracks" translatable="true">Избранные треки</string>
+    <string name="playlist_name" translatable="true">Название*</string>
+    <string name="playlist_description" translatable="true">Описание</string>
+    <string name="create" translatable="true">Создать</string>
+    <string name="add_to_playlist" translatable="true">Добавить в плейлист</string>
+    <string name="already_in_playlist" translatable="true">Трек уже добавлен в плейлист %1$s</string>
+    <string name="added_to_playlist" translatable="true">Добавлено в плейлист %1$s</string>
+
+    <plurals name="tracks_count" translatable="true">
+        <item name="one" translatable="true" quantity="one">%d трек</item>
+        <item name="few" translatable="true" quantity="few">%d трека</item>
+        <item name="many" translatable="true" quantity="many">%d треков</item>
+        <item name="other" translatable="true" quantity="other">%d треков</item>
+    </plurals>
 </resources>
