@@ -1,9 +1,10 @@
 package com.example.data.converters
 
 import com.example.data.db.entity.TrackEntity
+import com.example.data.db.entity.TrackInPlaylistEntity
 import com.example.domain.models.Track
 
-class TrackDbConvertor {
+class TrackDbConverter {
 
     fun map(track: Track): TrackEntity {
         return TrackEntity(
@@ -33,6 +34,22 @@ class TrackDbConvertor {
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl
+        )
+    }
+
+    fun mapToEntity(track: Track): TrackInPlaylistEntity {
+        return TrackInPlaylistEntity(
+            trackId = track.trackId,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTimeMillis = track.trackTimeMillis,
+            artworkUrl100 = track.artworkUrl100,
+            collectionName = track.collectionName ?: "",
+            releaseDate = track.releaseDate ?: "",
+            primaryGenreName = track.primaryGenreName,
+            country = track.country,
+            previewUrl = track.previewUrl,
+            insertTime = System.currentTimeMillis()
         )
     }
 }

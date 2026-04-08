@@ -31,10 +31,16 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         binding.bottomNavigationView.setupWithNavController(navController)
-    }
 
-    fun setBottomNavVisibility(isVisible: Boolean) {
-        binding.bottomNavigationView.visibility = if (isVisible) View.VISIBLE else View.GONE
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.newPlaylistFragment, R.id.audioPlayerFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                }
+                else -> {
+                    binding.bottomNavigationView.visibility = View.VISIBLE
+                }
+            }
+        }
     }
-
 }

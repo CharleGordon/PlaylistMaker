@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/trackImage"
+        android:layout_width="@dimen/image_45x45_size"
+        android:layout_height="@dimen/image_45x45_size"
+        android:layout_marginVertical="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        android:layout_marginStart="@dimen/margin_13dp"
+        app:shapeAppearanceOverlay="@style/RoundedCorners2"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginVertical="@dimen/margin_14dp"
+        android:layout_marginEnd="@dimen/margin_44dp"
+        android:orientation="vertical" >
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/trackName"
+            style="@style/regularText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="test"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tracksCount"
+            style="@style/subtitleGrayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="test"/>
+
+    </LinearLayout>
+
+</LinearLayout>

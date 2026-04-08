@@ -3,9 +3,11 @@ package com.example.playlistmaker.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.example.data.converters.TrackDbConvertor
+import com.example.data.converters.PlaylistDbConverter
+import com.example.data.converters.TrackDbConverter
 import com.example.data.impl.ExternalNavigator
 import com.example.data.impl.FavoritesRepositoryImpl
+import com.example.data.impl.PlaylistRepositoryImpl
 import com.example.data.impl.SearchHistoryRepositoryImpl
 import com.example.data.impl.ThemeRepositoryImpl
 import com.example.data.impl.TracksRepositoryImpl
@@ -13,6 +15,7 @@ import com.example.data.network.NetworkClient
 import com.example.data.network.RetrofitClient
 import com.example.data.network.SearchApiService
 import com.example.domain.api.FavoritesRepository
+import com.example.domain.api.PlaylistRepository
 import com.example.domain.api.SearchHistoryRepository
 import com.example.domain.api.SharingRepository
 import com.example.domain.api.ThemeRepository
@@ -30,12 +33,19 @@ val dataModule = module {
 
     single {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
             .build()
     }
 
     single { get<AppDatabase>().favoriteTracksDao() }
 
-    factory { TrackDbConvertor() }
+    single { get<AppDatabase>().playlistDao() }
+
+    single { get<AppDatabase>().trackInPlaylistDao() }
+
+    factory { TrackDbConverter() }
+
+    factory { PlaylistDbConverter(get()) }
 
     single<SearchApiService> {
         Retrofit.Builder()
@@ -74,7 +84,12 @@ val dataModule = module {
     }
 
     single<FavoritesRepository> {
-        FavoritesRepositoryImpl(favoriteTracksDao = get(), trackDbConvertor = get())
+        FavoritesRepositoryImpl(favoriteTracksDao = get(), trackDbConverter = get())
+    }
+
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(playlistDao = get(), context = androidContext(), playlistDbConverter = get(), trackInPlaylistDao = get(), trackDbConverter = get())
+
     }
 
 }
