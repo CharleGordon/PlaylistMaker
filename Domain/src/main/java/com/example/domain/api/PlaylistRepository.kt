@@ -8,5 +8,9 @@ interface PlaylistRepository {
     suspend fun savePlaylist(playlist: Playlist)
     suspend fun saveImageToPrivateStorage(uri: String): String
     suspend fun addTrackToPlaylist(track: Track?, playlist: Playlist)
+    suspend fun getTracksByIds(ids: List<Int>): List<Track>
+    suspend fun updatePlaylist(playlist: Playlist)
+    suspend fun getPlaylistById(id: Int): Playlist
+    suspend fun deletePlaylist(playlist: Playlist)
     fun getAllPlaylists(): Flow<List<Playlist>>
 }

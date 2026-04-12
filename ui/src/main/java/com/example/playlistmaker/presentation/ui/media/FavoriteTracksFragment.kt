@@ -72,12 +72,22 @@ class FavoriteTracksFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        trackAdapter = TrackAdapter(mutableListOf()) { track ->
-            if(debounce.clickDebounce()) {
+
+        val onTrackClick: (Track) -> Unit = { track ->
+            if (debounce.clickDebounce()) {
                 val trackJson = Gson().toJson(track)
-                findNavController().navigate(R.id.action_mediaFragment_to_audioPlayerFragment, AudioPlayerFragment.createArgs(trackJson))
+                findNavController().navigate(
+                    R.id.action_mediaFragment_to_audioPlayerFragment,
+                    AudioPlayerFragment.createArgs(trackJson)
+                )
             }
         }
+
+        trackAdapter = TrackAdapter(
+            tracks = mutableListOf(),
+            clickListener = onTrackClick,
+            longClickListener = null
+        )
         binding.trackRecycler.adapter = trackAdapter
     }
 

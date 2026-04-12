@@ -37,6 +37,21 @@ class TrackDbConverter {
         )
     }
 
+    fun map(track: TrackInPlaylistEntity): Track {
+        return Track(
+            trackId = track.trackId,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTimeMillis = track.trackTimeMillis,
+            artworkUrl100 = track.artworkUrl100,
+            collectionName = track.collectionName,
+            releaseDate = track.releaseDate,
+            primaryGenreName = track.primaryGenreName,
+            country = track.country,
+            previewUrl = track.previewUrl
+        )
+    }
+
     fun mapToEntity(track: Track): TrackInPlaylistEntity {
         return TrackInPlaylistEntity(
             trackId = track.trackId,
@@ -52,4 +67,6 @@ class TrackDbConverter {
             insertTime = System.currentTimeMillis()
         )
     }
+
+
 }

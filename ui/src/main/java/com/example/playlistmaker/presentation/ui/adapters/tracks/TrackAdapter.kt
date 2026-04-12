@@ -6,7 +6,8 @@ import com.example.domain.models.Track
 
 class TrackAdapter(
     private var tracks: MutableList<Track>,
-    private val clickListener: TrackClickListener
+    private val clickListener: TrackClickListener,
+    private val longClickListener: TrackLongClickListener? = null
 ) : RecyclerView.Adapter<TrackViewHolder> (){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : TrackViewHolder {
@@ -18,6 +19,11 @@ class TrackAdapter(
         holder.bind(track)
         holder.itemView.setOnClickListener {
             clickListener.onTrackClickListener(track)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            longClickListener?.onTrackLongClickListener(track)
+            true
         }
     }
 
@@ -32,6 +38,10 @@ class TrackAdapter(
     }
 
     fun interface TrackClickListener {
-        fun onTrackClickListener(track: com.example.domain.models.Track)
+        fun onTrackClickListener(track: Track)
+    }
+
+    fun interface TrackLongClickListener {
+        fun onTrackLongClickListener(track: Track)
     }
 }

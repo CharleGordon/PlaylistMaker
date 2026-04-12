@@ -13,4 +13,7 @@ interface TrackInPlaylistDao {
 
     @Query("SELECT * FROM tracks_in_playlists_table WHERE trackId = :trackId")
     suspend fun getTrackById(trackId: Int): TrackInPlaylistEntity?
+
+    @Query("SELECT * FROM tracks_in_playlists_table WHERE trackId IN (:ids)")
+    suspend fun getTracksByIds(ids: List<Int>): List<TrackInPlaylistEntity>
 }

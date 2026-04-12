@@ -63,13 +63,30 @@ class AudioPlayerFragmentViewModel(
     }
 
     fun addTrackToPlaylist(track: Track?, playlist: Playlist) {
-        if (playlist.trackIds.contains(track?.trackId?.toLong())) {
-            _addingResult.postValue(AddingStatus.ALREADY_EXISTS to playlist.title)
+        if (track == null) return
+
+        val cleanedIds = playlist.trackIds
+            ?.replace("[", "")
+            ?.replace("]", "")
+            ?.replace(" ", "")
+
+        val trackIdsList = if (cleanedIds?.isEmpty() == true) {
+            mutableListOf<Long>()
         } else {
-            viewModelScope.launch {
-                playlistInteractor.addTrackToPlaylist(track, playlist)
-                _addingResult.postValue(AddingStatus.ADDED to playlist.title)
-                fillData()
+            cleanedIds?.split(",")
+                ?.mapNotNull { it.toLongOrNull() }
+                ?.toMutableList()
+        }
+
+        if (trackIdsList != null) {
+            if (trackIdsList.contains(track.trackId.toLong())) {
+                _addingResult.postValue(AddingStatus.ALREADY_EXISTS to playlist.title)
+            } else {
+                viewModelScope.launch {
+                    playlistInteractor.addTrackToPlaylist(track, playlist)
+                    _addingResult.postValue(AddingStatus.ADDED to playlist.title)
+                    fillData()
+                }
             }
         }
     }

@@ -30,6 +30,22 @@
     <string name="add_to_playlist" translatable="true">Добавить в плейлист</string>
     <string name="already_in_playlist" translatable="true">Трек уже добавлен в плейлист %1$s</string>
     <string name="added_to_playlist" translatable="true">Добавлено в плейлист %1$s</string>
+    <string name="delete_track_message" translatable="true">Хотите удалить трек?</string>
+    <string name="no" translatable="true">Нет</string>
+    <string name="yes" translatable="true">Да</string>
+    <string name="cancel" translatable="true">Отмена</string>
+    <string name="complete" translatable="true">Завершить</string>
+    <string name="complete_playlist_message" translatable="true">Все несохраненные данные будут потеряны</string>
+    <string name="complete_playlist_title" translatable="true">Завершить создание плейлиста?</string>
+    <string name="empty_playlist_share_error" translatable="true">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="share" translatable="true">Поделиться</string>
+    <string name="edit_info" translatable="true">Редактировать информацию</string>
+    <string name="delete_playlist" translatable="true">Удалить плейлист</string>
+    <string name="delete_playlist_message" translatable="true">Хотите удалить плейлист «%s»? </string>
+    <string name="edit_playlist_title" translatable="true">Редактировать</string>
+    <string name="save_playlist_button" translatable="true">Сохранить</string>
+    <string name="placeholder_no_tracks" translatable="true">В этом плейлисте нет треков</string>
+
 
     <plurals name="tracks_count" translatable="true">
         <item name="one" translatable="true" quantity="one">%d трек</item>

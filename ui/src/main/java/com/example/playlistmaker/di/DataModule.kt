@@ -45,7 +45,7 @@ val dataModule = module {
 
     factory { TrackDbConverter() }
 
-    factory { PlaylistDbConverter(get()) }
+    factory { PlaylistDbConverter() }
 
     single<SearchApiService> {
         Retrofit.Builder()

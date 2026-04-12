@@ -29,7 +29,9 @@ class PlaylistRepositoryImpl(
 
     override suspend fun savePlaylist(playlist: Playlist) {
         val entity = playlistDbConverter.map(playlist)
-        playlistDao.insertPlaylist(entity)
+        if (entity != null) {
+            playlistDao.insertPlaylist(entity)
+        }
     }
 
     override suspend fun saveImageToPrivateStorage(uri: String): String {
@@ -52,17 +54,29 @@ class PlaylistRepositoryImpl(
         return file.absolutePath
     }
 
-    override suspend fun addTrackToPlaylist(track: Track?, playlist: Playlist) {
+    override suspend fun addTrackToPlaylist(track: Track?, playlist: Playlist) = withContext(Dispatchers.IO) {
+        if (track == null) return@withContext
 
-        val updatedTrackIds = playlist.trackIds.toMutableList()
-        track?.trackId?.toLong()?.let { updatedTrackIds.add(it) }
-        val updatedPlaylist = playlist.copy(
-            trackIds = updatedTrackIds,
-            tracksCount = updatedTrackIds.size
-        )
+        val cleanedString = playlist.trackIds?.filter { it.isDigit() || it == ',' } ?: ""
 
-        playlistDao.updatePlaylist(playlistDbConverter.map(updatedPlaylist))
-        track?.let { trackDbConverter.mapToEntity(it) }?.let { trackInPlaylistDao.insertTrack(it) }
+        val currentIds = cleanedString.split(",")
+            .filter { it.isNotEmpty() }
+            .mapNotNull { it.toIntOrNull() }
+            .toMutableList()
+
+        val trackId = track.trackId
+
+        if (!currentIds.contains(trackId)) {
+            currentIds.add(trackId)
+
+            val updatedPlaylist = playlist.copy(
+                trackIds = currentIds.joinToString(","),
+                tracksCount = currentIds.size
+            )
+
+            playlistDbConverter.map(updatedPlaylist)?.let { playlistDao.updatePlaylist(it) }
+            trackInPlaylistDao.insertTrack(trackDbConverter.mapToEntity(track))
+        }
     }
 
     override fun getAllPlaylists(): Flow<List<Playlist>> {
@@ -71,5 +85,23 @@ class PlaylistRepositoryImpl(
                 playlistDbConverter.map(entity)
             }
         }
+    }
+
+    override suspend fun getPlaylistById(id: Int): Playlist {
+        val entity = playlistDao.getPlaylistById(id)
+        return playlistDbConverter.map(entity)
+    }
+
+    override suspend fun getTracksByIds(ids: List<Int>): List<Track> = withContext(Dispatchers.IO) {
+        val entities = trackInPlaylistDao.getTracksByIds(ids)
+        entities.map { trackDbConverter.map(it) }
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        playlistDbConverter.map(playlist)?.let { playlistDao.updatePlaylist(it) }
+    }
+
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        playlistDbConverter.map(playlist)?.let { playlistDao.deletePlaylist(it) }
     }
 }
