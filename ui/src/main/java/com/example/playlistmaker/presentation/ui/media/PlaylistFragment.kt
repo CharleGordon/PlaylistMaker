@@ -31,7 +31,14 @@ class PlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PlaylistAdapter { playlist ->  }
+        adapter = PlaylistAdapter { playlist ->
+
+            val bundle = Bundle().apply {
+                putInt("playlistId", playlist.id)
+            }
+
+            findNavController().navigate(R.id.action_mediaFragment_to_playlistDetailsFragment, bundle)
+        }
 
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.adapter = adapter

@@ -1,6 +1,7 @@
 package com.example.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -11,6 +12,12 @@ interface TrackInPlaylistDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTrack(track: TrackInPlaylistEntity)
 
+    @Delete
+    suspend fun deleteTrack(track: TrackInPlaylistEntity)
+
     @Query("SELECT * FROM tracks_in_playlists_table WHERE trackId = :trackId")
     suspend fun getTrackById(trackId: Int): TrackInPlaylistEntity?
+
+    @Query("SELECT * FROM tracks_in_playlists_table WHERE trackId IN (:ids)")
+    suspend fun getTracksByIds(ids: List<Int>): List<TrackInPlaylistEntity>
 }

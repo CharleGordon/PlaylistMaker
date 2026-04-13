@@ -17,12 +17,12 @@ import com.example.playlistmaker.presentation.viewmodel.media.NewPlaylistViewMod
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewPlaylistFragment : Fragment() {
+open class NewPlaylistFragment : Fragment() {
 
     private var _binding: NewPlaylistFragmentBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
-    private val viewModel by viewModel<NewPlaylistViewModel>()
+    protected open val viewModel by viewModel<NewPlaylistViewModel>()
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
@@ -55,13 +55,7 @@ class NewPlaylistFragment : Fragment() {
         }
 
         binding.createButton.setOnClickListener {
-            val name = binding.inputPlaylistName.text.toString()
-            viewModel.createPlaylist(
-                name,
-                binding.inputPlaylistDescription.text.toString()
-            )
-            findNavController().popBackStack()
-            Toast.makeText(requireContext(), "Плейлист $name создан", Toast.LENGTH_SHORT).show()
+            setupCreateButton()
         }
 
         binding.topPanel.setNavigationOnClickListener {
@@ -76,7 +70,7 @@ class NewPlaylistFragment : Fragment() {
         })
     }
 
-    private fun handleBackNavigation() {
+    open fun handleBackNavigation() {
         val name = binding.inputPlaylistName.text.toString()
         val desc = binding.inputPlaylistDescription.text.toString()
 
@@ -89,11 +83,21 @@ class NewPlaylistFragment : Fragment() {
 
     private fun showConfirmDialog() {
         MaterialAlertDialogBuilder(requireContext(), R.style.MyAlertDialogTheme)
-            .setTitle("Завершить создание плейлиста?")
-            .setMessage("Все несохраненные данные будут потеряны")
-            .setNeutralButton("Отмена") { _, _ ->  }
-            .setPositiveButton("Завершить") { _, _ -> findNavController().popBackStack() }
+            .setTitle(getString(R.string.complete_playlist_title))
+            .setMessage(getString(R.string.complete_playlist_message))
+            .setNeutralButton(getString(R.string.cancel)) { _, _ ->  }
+            .setPositiveButton(getString(R.string.complete)) { _, _ -> findNavController().popBackStack() }
             .show()
+    }
+
+    open fun setupCreateButton() {
+        val name = binding.inputPlaylistName.text.toString()
+        viewModel.createPlaylist(
+            name,
+            binding.inputPlaylistDescription.text.toString()
+        )
+        findNavController().popBackStack()
+        Toast.makeText(requireContext(), "Плейлист $name создан", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

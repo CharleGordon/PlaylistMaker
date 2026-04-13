@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.domain.models.Track
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.presentation.ui.adapters.tracks.TrackAdapter
@@ -97,20 +98,29 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        trackAdapter = TrackAdapter(mutableListOf()) { track ->
-            if(debounce.clickDebounce()) {
-                val trackJson = Gson().toJson(track)
-                viewModel.onTrackClicked(track)
-                findNavController().navigate(R.id.action_searchFragment2_to_audioPlayerFragment, AudioPlayerFragment.createArgs(trackJson))
-            }
-        }
-        trackHistoryAdapter = TrackAdapter(mutableListOf()) { track ->
+
+        val onTrackClick: (Track) -> Unit = { track ->
             if (debounce.clickDebounce()) {
                 val trackJson = Gson().toJson(track)
                 viewModel.onTrackClicked(track)
-                findNavController().navigate(R.id.action_searchFragment2_to_audioPlayerFragment, AudioPlayerFragment.createArgs(trackJson))
+                findNavController().navigate(
+                    R.id.action_searchFragment2_to_audioPlayerFragment,
+                    AudioPlayerFragment.createArgs(trackJson)
+                )
             }
         }
+
+        trackAdapter = TrackAdapter(
+            tracks = mutableListOf(),
+            clickListener = onTrackClick,
+            longClickListener = null
+        )
+
+        trackHistoryAdapter = TrackAdapter(
+            tracks = mutableListOf(),
+            clickListener = onTrackClick,
+            longClickListener = null
+        )
         binding.trackRecycler.adapter = trackAdapter
         binding.searchHistoryRecycler.adapter = trackHistoryAdapter
     }

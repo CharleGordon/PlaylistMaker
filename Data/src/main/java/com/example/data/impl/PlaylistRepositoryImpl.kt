@@ -14,10 +14,15 @@ import com.example.domain.models.Playlist
 import com.example.domain.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.text.any
+import kotlin.text.contains
+import kotlin.text.first
+import kotlin.text.split
 
 class PlaylistRepositoryImpl(
     private val playlistDao: PlaylistDao,
@@ -29,7 +34,9 @@ class PlaylistRepositoryImpl(
 
     override suspend fun savePlaylist(playlist: Playlist) {
         val entity = playlistDbConverter.map(playlist)
-        playlistDao.insertPlaylist(entity)
+        if (entity != null) {
+            playlistDao.insertPlaylist(entity)
+        }
     }
 
     override suspend fun saveImageToPrivateStorage(uri: String): String {
@@ -52,23 +59,85 @@ class PlaylistRepositoryImpl(
         return file.absolutePath
     }
 
-    override suspend fun addTrackToPlaylist(track: Track?, playlist: Playlist) {
+    override suspend fun addTrackToPlaylist(track: Track?, playlist: Playlist) = withContext(Dispatchers.IO) {
+        if (track == null) return@withContext
 
-        val updatedTrackIds = playlist.trackIds.toMutableList()
-        track?.trackId?.toLong()?.let { updatedTrackIds.add(it) }
-        val updatedPlaylist = playlist.copy(
-            trackIds = updatedTrackIds,
-            tracksCount = updatedTrackIds.size
-        )
+        val cleanedString = playlist.trackIds?.filter { it.isDigit() || it == ',' } ?: ""
 
-        playlistDao.updatePlaylist(playlistDbConverter.map(updatedPlaylist))
-        track?.let { trackDbConverter.mapToEntity(it) }?.let { trackInPlaylistDao.insertTrack(it) }
+        val currentIds = cleanedString.split(",")
+            .filter { it.isNotEmpty() }
+            .mapNotNull { it.toIntOrNull() }
+            .toMutableList()
+
+        val trackId = track.trackId
+
+        if (!currentIds.contains(trackId)) {
+            currentIds.add(trackId)
+
+            val updatedPlaylist = playlist.copy(
+                trackIds = currentIds.joinToString(","),
+                tracksCount = currentIds.size
+            )
+
+            playlistDbConverter.map(updatedPlaylist)?.let { playlistDao.updatePlaylist(it) }
+            trackInPlaylistDao.insertTrack(trackDbConverter.mapToEntity(track))
+        }
     }
 
     override fun getAllPlaylists(): Flow<List<Playlist>> {
         return playlistDao.getAllPlaylists().map { entities ->
             entities.map { entity ->
                 playlistDbConverter.map(entity)
+            }
+        }
+    }
+
+    override suspend fun getPlaylistById(id: Int): Playlist {
+        val entity = playlistDao.getPlaylistById(id)
+        return playlistDbConverter.map(entity)
+    }
+
+    override suspend fun getTracksByIds(ids: List<Int>): List<Track> = withContext(Dispatchers.IO) {
+        val entities = trackInPlaylistDao.getTracksByIds(ids)
+        entities.map { trackDbConverter.map(it) }
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        playlistDbConverter.map(playlist)?.let { playlistDao.updatePlaylist(it) }
+    }
+
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        playlistDbConverter.map(playlist)?.let { playlistDao.deletePlaylist(it) }
+    }
+
+    override suspend fun removeTrackFromPlaylist(trackId: Int, playlistId: Int) = withContext(Dispatchers.IO) {
+        val playlistEntity = playlistDao.getPlaylistById(playlistId)
+        val playlist = playlistDbConverter.map(playlistEntity)
+
+        val currentIds = playlist.trackIds
+            ?.split(",")
+            ?.filter { it.isNotEmpty() && it.toInt() != trackId }
+
+        val updatedPlaylist = currentIds?.let {
+            playlist.copy(
+                trackIds = currentIds.joinToString(","),
+                tracksCount = it.size
+            )
+        }
+
+        if (updatedPlaylist != null) {
+            playlistDbConverter.map(updatedPlaylist)?.let { playlistDao.updatePlaylist(it) }
+        }
+
+        val allPlaylists = playlistDao.getAllPlaylists().first()
+        val isTrackUsedElsewhere = allPlaylists.any { otherPlaylist ->
+            otherPlaylist.trackIds.split(",").contains(trackId.toString()) == true
+        }
+
+        if (!isTrackUsedElsewhere) {
+            val trackEntity = trackInPlaylistDao.getTrackById(trackId)
+            if (trackEntity != null) {
+                trackInPlaylistDao.deleteTrack(trackEntity)
             }
         }
     }

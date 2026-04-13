@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/menuBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bottom_sheet_background"
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        android:layout_width="50dp"
+        android:layout_height="@dimen/margin_4dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:background="@drawable/bottom_sheet_handle" />
+
+    <include
+        android:id="@+id/playlistItem"
+        layout="@layout/item_playlist_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_12dp" />
+
+    <TextView
+        android:id="@+id/menuShare"
+        style="@style/regularText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/margin_21dp"
+        android:paddingHorizontal="@dimen/margin_16dp"
+        android:text="@string/share" />
+
+    <TextView
+        android:id="@+id/menuEdit"
+        style="@style/regularText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/margin_21dp"
+        android:paddingHorizontal="@dimen/margin_16dp"
+        android:text="@string/edit_info" />
+
+    <TextView
+        android:id="@+id/menuDelete"
+        style="@style/regularText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/margin_21dp"
+        android:paddingHorizontal="@dimen/margin_16dp"
+        android:text="@string/delete_playlist" />
+
+</LinearLayout>

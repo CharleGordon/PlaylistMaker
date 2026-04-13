@@ -10,11 +10,12 @@ import com.example.domain.api.PlaylistInteractor
 import com.example.domain.models.Playlist
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
-    private val interactor: PlaylistInteractor
+open class NewPlaylistViewModel(
+    protected open val interactor: PlaylistInteractor
 ) : ViewModel() {
 
-    private var currentImageUri: Uri? = null
+    var currentImageUri: Uri? = null
+        protected set
 
     private val _isCreateButtonEnabled = MutableLiveData<Boolean>(false)
     val isCreateButtonEnabled: LiveData<Boolean> = _isCreateButtonEnabled
@@ -23,7 +24,7 @@ class NewPlaylistViewModel(
         _isCreateButtonEnabled.value = !text.isNullOrBlank()
     }
 
-    fun saveTempImage(uri: Uri) {
+    open fun saveTempImage(uri: Uri) {
         viewModelScope.launch {
             val internalPath = interactor.saveImageToPrivateStorage(uri.toString())
 
@@ -38,7 +39,7 @@ class NewPlaylistViewModel(
                 title = title,
                 description = description,
                 imagePath = currentImageUri.toString(),
-                trackIds = emptyList(),
+                trackIds = "",
                 tracksCount = 0
             )
 

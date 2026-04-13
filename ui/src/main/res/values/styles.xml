@@ -8,6 +8,13 @@
         <item name="android:textFontWeight">500</item>
     </style>
 
+    <style name="boldText" >
+        <item name="android:textSize">@dimen/margin_24dp</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:fontFamily">@font/ys_display_bold</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
     <style name="regularText" >
         <item name="android:textSize">@dimen/text_indent</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
