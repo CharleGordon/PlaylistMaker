@@ -135,7 +135,7 @@
         app:behavior_hideable="false"
         app:behavior_peekHeight="240dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <View
             android:layout_width="50dp"
@@ -149,7 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/placeholder_no_tracks"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_12dp"
             style="@style/regularText" />
 

@@ -49,6 +49,7 @@ class PlaylistDetailsViewModel(
     fun deleteTrack(trackId: Int) {
         viewModelScope.launch {
             val currentPlaylist = _playlist.value ?: return@launch
+            interactor.removeTrackFromPlaylist(trackId, playlistId)
             interactor.deleteTrackFromPlaylist(trackId, currentPlaylist)
             getData()
         }
